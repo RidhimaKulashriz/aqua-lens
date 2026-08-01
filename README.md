@@ -1,14 +1,6 @@
 <div align="center">
 
-<img src="assets/logo-animated.svg" width="720" alt="AquaLens" />
-
 **Autonomous freshwater monitoring with a deterministic analysis core and a traceable Gemini agent layer.**
-
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776ab.svg)](https://python.org)
-[![Next.js 15](https://img.shields.io/badge/next.js-15-000000.svg)](https://nextjs.org)
-[![FastAPI 0.115](https://img.shields.io/badge/fastapi-0.115-009688.svg)](https://fastapi.tiangolo.com)
-[![PostgreSQL 16 + PostGIS](https://img.shields.io/badge/postgres-16%20%2B%20postgis-336791.svg)](https://postgis.net)
-
 </div>
 
 > Advisory only. AquaLens helps teams prioritize sampling locations. It does not certify water safety or replace laboratory testing.
