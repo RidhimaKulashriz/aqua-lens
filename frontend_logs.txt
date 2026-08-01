@@ -1,0 +1,282 @@
+﻿2026-08-01T16:03:04.7123327Z Current runner version: '2.336.0'
+2026-08-01T16:03:04.7150986Z ##[group]Runner Image Provisioner
+2026-08-01T16:03:04.7152071Z Hosted Compute Agent
+2026-08-01T16:03:04.7152824Z Version: 20260707.563
+2026-08-01T16:03:04.7153730Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+2026-08-01T16:03:04.7154712Z Build Date: 2026-07-07T19:33:50Z
+2026-08-01T16:03:04.7155523Z Worker ID: {52bfe806-7bb3-4e8e-a65c-7f19877d6e5d}
+2026-08-01T16:03:04.7156355Z Azure Region: westus3
+2026-08-01T16:03:04.7157149Z ##[endgroup]
+2026-08-01T16:03:04.7158834Z ##[group]Operating System
+2026-08-01T16:03:04.7159637Z Ubuntu
+2026-08-01T16:03:04.7160254Z 24.04.4
+2026-08-01T16:03:04.7160851Z LTS
+2026-08-01T16:03:04.7161601Z ##[endgroup]
+2026-08-01T16:03:04.7162256Z ##[group]Runner Image
+2026-08-01T16:03:04.7162942Z Image: ubuntu-24.04
+2026-08-01T16:03:04.7163905Z Version: 20260720.247.2
+2026-08-01T16:03:04.7165442Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260720.247/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-01T16:03:04.7167568Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260720.247
+2026-08-01T16:03:04.7168711Z ##[endgroup]
+2026-08-01T16:03:04.7170760Z ##[group]GITHUB_TOKEN Permissions
+2026-08-01T16:03:04.7173271Z Contents: read
+2026-08-01T16:03:04.7174094Z Metadata: read
+2026-08-01T16:03:04.7174755Z Packages: read
+2026-08-01T16:03:04.7175455Z ##[endgroup]
+2026-08-01T16:03:04.7177797Z Secret source: Actions
+2026-08-01T16:03:04.7178977Z Prepare workflow directory
+2026-08-01T16:03:04.8168761Z Prepare all required actions
+2026-08-01T16:03:04.8224391Z Getting action download info
+2026-08-01T16:03:05.1122909Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-08-01T16:03:06.3802257Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+2026-08-01T16:03:07.2456065Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-08-01T16:03:07.4283908Z Complete job name: Frontend (typecheck + lint + vitest)
+2026-08-01T16:03:07.4853867Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-01T16:03:07.4859972Z ##[group]Run actions/checkout@v4
+2026-08-01T16:03:07.4860360Z with:
+2026-08-01T16:03:07.4860595Z   repository: RidhimaKulashriz/aqua-lens
+2026-08-01T16:03:07.4862718Z   token: ***
+2026-08-01T16:03:07.4862940Z   ssh-strict: true
+2026-08-01T16:03:07.4863293Z   ssh-user: git
+2026-08-01T16:03:07.4863517Z   persist-credentials: true
+2026-08-01T16:03:07.4863756Z   clean: true
+2026-08-01T16:03:07.4863982Z   sparse-checkout-cone-mode: true
+2026-08-01T16:03:07.4864242Z   fetch-depth: 1
+2026-08-01T16:03:07.4864452Z   fetch-tags: false
+2026-08-01T16:03:07.4864673Z   show-progress: true
+2026-08-01T16:03:07.4864914Z   lfs: false
+2026-08-01T16:03:07.4865150Z   submodules: false
+2026-08-01T16:03:07.4865368Z   set-safe-directory: true
+2026-08-01T16:03:07.4865622Z   allow-unsafe-pr-checkout: false
+2026-08-01T16:03:07.4866022Z env:
+2026-08-01T16:03:07.4866235Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-08-01T16:03:07.4866496Z ##[endgroup]
+2026-08-01T16:03:07.5649850Z Syncing repository: RidhimaKulashriz/aqua-lens
+2026-08-01T16:03:07.5651233Z ##[group]Getting Git version info
+2026-08-01T16:03:07.5651614Z Working directory is '/home/runner/work/aqua-lens/aqua-lens'
+2026-08-01T16:03:07.5652332Z [command]/usr/bin/git version
+2026-08-01T16:03:07.5671639Z git version 2.54.0
+2026-08-01T16:03:07.5721333Z ##[endgroup]
+2026-08-01T16:03:07.5734535Z Temporarily overriding HOME='/home/runner/work/_temp/6abc166f-c1d3-42a2-844c-6b70f1e2b53c' before making global git config changes
+2026-08-01T16:03:07.5735508Z Adding repository directory to the temporary git global config as a safe directory
+2026-08-01T16:03:07.5739464Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aqua-lens/aqua-lens
+2026-08-01T16:03:07.5772479Z Deleting the contents of '/home/runner/work/aqua-lens/aqua-lens'
+2026-08-01T16:03:07.5776375Z ##[group]Initializing the repository
+2026-08-01T16:03:07.5779895Z [command]/usr/bin/git init /home/runner/work/aqua-lens/aqua-lens
+2026-08-01T16:03:07.5868226Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-08-01T16:03:07.5869573Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-08-01T16:03:07.5870683Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-08-01T16:03:07.5871238Z hint: call:
+2026-08-01T16:03:07.5871512Z hint:
+2026-08-01T16:03:07.5871943Z hint: 	git config --global init.defaultBranch <name>
+2026-08-01T16:03:07.5872383Z hint:
+2026-08-01T16:03:07.5872811Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-08-01T16:03:07.5873693Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-08-01T16:03:07.5874240Z hint:
+2026-08-01T16:03:07.5874539Z hint: 	git branch -m <name>
+2026-08-01T16:03:07.5874865Z hint:
+2026-08-01T16:03:07.5875326Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-08-01T16:03:07.5876014Z Initialized empty Git repository in /home/runner/work/aqua-lens/aqua-lens/.git/
+2026-08-01T16:03:07.5879630Z [command]/usr/bin/git remote add origin https://github.com/RidhimaKulashriz/aqua-lens
+2026-08-01T16:03:07.5909476Z ##[endgroup]
+2026-08-01T16:03:07.5910062Z ##[group]Disabling automatic garbage collection
+2026-08-01T16:03:07.5913429Z [command]/usr/bin/git config --local gc.auto 0
+2026-08-01T16:03:07.5939262Z ##[endgroup]
+2026-08-01T16:03:07.5939768Z ##[group]Setting up auth
+2026-08-01T16:03:07.5951445Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-08-01T16:03:07.5982986Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-08-01T16:03:07.6252023Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-08-01T16:03:07.6285629Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-08-01T16:03:07.6494235Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-08-01T16:03:07.6524583Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-08-01T16:03:07.6717204Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-08-01T16:03:07.6750036Z ##[endgroup]
+2026-08-01T16:03:07.6750525Z ##[group]Fetching the repository
+2026-08-01T16:03:07.6758629Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +57df582a9bcef26e30ea4f9f41f6bdb29103d0ff:refs/remotes/origin/master
+2026-08-01T16:03:08.4322907Z From https://github.com/RidhimaKulashriz/aqua-lens
+2026-08-01T16:03:08.4323579Z  * [new ref]         57df582a9bcef26e30ea4f9f41f6bdb29103d0ff -> origin/master
+2026-08-01T16:03:08.4341956Z ##[endgroup]
+2026-08-01T16:03:08.4342472Z ##[group]Determining the checkout info
+2026-08-01T16:03:08.4345047Z ##[endgroup]
+2026-08-01T16:03:08.4349991Z [command]/usr/bin/git sparse-checkout disable
+2026-08-01T16:03:08.4385628Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-08-01T16:03:08.4411676Z ##[group]Checking out the ref
+2026-08-01T16:03:08.4415727Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2026-08-01T16:03:08.4589065Z Reset branch 'master'
+2026-08-01T16:03:08.4590880Z branch 'master' set up to track 'origin/master'.
+2026-08-01T16:03:08.4595788Z ##[endgroup]
+2026-08-01T16:03:08.4628753Z [command]/usr/bin/git log -1 --format=%H
+2026-08-01T16:03:08.4651427Z 57df582a9bcef26e30ea4f9f41f6bdb29103d0ff
+2026-08-01T16:03:08.4831149Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-01T16:03:08.4832395Z ##[group]Run pnpm/action-setup@v4
+2026-08-01T16:03:08.4832598Z with:
+2026-08-01T16:03:08.4832752Z   version: 9
+2026-08-01T16:03:08.4832913Z   dest: ~/setup-pnpm
+2026-08-01T16:03:08.4833087Z   run_install: null
+2026-08-01T16:03:08.4833467Z   cache: false
+2026-08-01T16:03:08.4833643Z   cache_dependency_path: pnpm-lock.yaml
+2026-08-01T16:03:08.4833867Z   package_json_file: package.json
+2026-08-01T16:03:08.4834064Z   standalone: false
+2026-08-01T16:03:08.4834227Z env:
+2026-08-01T16:03:08.4834408Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-08-01T16:03:08.4834621Z ##[endgroup]
+2026-08-01T16:03:08.5973233Z ##[group]Running self-installer...
+2026-08-01T16:03:08.9014964Z (node:2041) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-08-01T16:03:08.9016415Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-08-01T16:03:09.0749755Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-08-01T16:03:09.0816126Z Packages: +1
+2026-08-01T16:03:09.0816459Z +
+2026-08-01T16:03:09.4040479Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+2026-08-01T16:03:09.4445066Z 
+2026-08-01T16:03:09.4445575Z dependencies:
+2026-08-01T16:03:09.4445945Z + pnpm 9.15.9 (11.18.0 is available)
+2026-08-01T16:03:09.4446224Z 
+2026-08-01T16:03:09.4464440Z Done in 709ms
+2026-08-01T16:03:09.4611319Z ##[endgroup]
+2026-08-01T16:03:09.4611801Z Installation Completed!
+2026-08-01T16:03:09.4771207Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-01T16:03:09.4772219Z ##[group]Run actions/setup-node@v4
+2026-08-01T16:03:09.4772427Z with:
+2026-08-01T16:03:09.4772606Z   node-version: 24
+2026-08-01T16:03:09.4772795Z   cache: pnpm
+2026-08-01T16:03:09.4773004Z   cache-dependency-path: frontend/pnpm-lock.yaml
+2026-08-01T16:03:09.4773484Z   always-auth: false
+2026-08-01T16:03:09.4773661Z   check-latest: false
+2026-08-01T16:03:09.4775616Z   token: ***
+2026-08-01T16:03:09.4775794Z env:
+2026-08-01T16:03:09.4775964Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-08-01T16:03:09.4776241Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-08-01T16:03:09.4776494Z ##[endgroup]
+2026-08-01T16:03:09.5881577Z Found in cache @ /opt/hostedtoolcache/node/24.18.0/x64
+2026-08-01T16:03:09.5885800Z (node:2055) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-08-01T16:03:09.5886747Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-08-01T16:03:09.5888177Z ##[group]Environment details
+2026-08-01T16:03:09.8499080Z node: v24.18.0
+2026-08-01T16:03:09.8499740Z npm: 11.16.0
+2026-08-01T16:03:09.8500372Z yarn: 1.22.22
+2026-08-01T16:03:09.8501066Z ##[endgroup]
+2026-08-01T16:03:09.8539733Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+2026-08-01T16:03:10.1372816Z /home/runner/setup-pnpm/node_modules/.bin/store/v3
+2026-08-01T16:03:10.3482287Z Cache hit for: node-cache-Linux-x64-pnpm-d1352cf485c63e233b440eb9756bf3d01412343f37365c2175aab497464992a4
+2026-08-01T16:03:10.3561513Z (node:2055) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-08-01T16:03:11.5763682Z Received 20971520 of 214374033 (9.8%), 20.0 MBs/sec
+2026-08-01T16:03:12.5775435Z Received 155189248 of 214374033 (72.4%), 73.9 MBs/sec
+2026-08-01T16:03:12.8559501Z Received 214374033 of 214374033 (100.0%), 89.7 MBs/sec
+2026-08-01T16:03:12.8603781Z Cache Size: ~204 MB (214374033 B)
+2026-08-01T16:03:12.8655216Z [command]/usr/bin/tar -xf /home/runner/work/_temp/dd164b0f-dc97-4be1-856d-6cb36fa6bbfe/cache.tzst -P -C /home/runner/work/aqua-lens/aqua-lens --use-compress-program unzstd
+2026-08-01T16:03:14.4291108Z Cache restored successfully
+2026-08-01T16:03:14.4380282Z Cache restored from key: node-cache-Linux-x64-pnpm-d1352cf485c63e233b440eb9756bf3d01412343f37365c2175aab497464992a4
+2026-08-01T16:03:14.4530923Z ##[group]Run pnpm install --frozen-lockfile=false
+2026-08-01T16:03:14.4531303Z [36;1mpnpm install --frozen-lockfile=false[0m
+2026-08-01T16:03:14.4578358Z shell: /usr/bin/bash -e {0}
+2026-08-01T16:03:14.4578580Z env:
+2026-08-01T16:03:14.4578764Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-08-01T16:03:14.4579045Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-08-01T16:03:14.4579289Z ##[endgroup]
+2026-08-01T16:03:14.7930809Z Lockfile is up to date, resolution step is skipped
+2026-08-01T16:03:14.8313608Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-08-01T16:03:14.9230767Z Packages: +721
+2026-08-01T16:03:14.9231303Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2026-08-01T16:03:15.8334857Z Progress: resolved 721, reused 721, downloaded 0, added 173
+2026-08-01T16:03:16.3189175Z Progress: resolved 721, reused 721, downloaded 0, added 721, done
+2026-08-01T16:03:16.8101837Z 
+2026-08-01T16:03:16.8102460Z dependencies:
+2026-08-01T16:03:16.8102960Z + @hookform/resolvers 3.10.0
+2026-08-01T16:03:16.8103537Z + @next/env 15.5.18
+2026-08-01T16:03:16.8103904Z + @radix-ui/react-dialog 1.1.15
+2026-08-01T16:03:16.8104326Z + @radix-ui/react-dropdown-menu 2.1.16
+2026-08-01T16:03:16.8104736Z + @radix-ui/react-label 2.1.8
+2026-08-01T16:03:16.8105165Z + @radix-ui/react-popover 1.1.15
+2026-08-01T16:03:16.8105549Z + @radix-ui/react-progress 1.1.8
+2026-08-01T16:03:16.8105929Z + @radix-ui/react-scroll-area 1.2.10
+2026-08-01T16:03:16.8106179Z + @radix-ui/react-select 2.2.6
+2026-08-01T16:03:16.8106479Z + @radix-ui/react-separator 1.1.8
+2026-08-01T16:03:16.8106869Z + @radix-ui/react-slider 1.3.6
+2026-08-01T16:03:16.8107216Z + @radix-ui/react-slot 1.2.4
+2026-08-01T16:03:16.8107578Z + @radix-ui/react-switch 1.2.6
+2026-08-01T16:03:16.8107920Z + @radix-ui/react-tabs 1.1.13
+2026-08-01T16:03:16.8108328Z + @radix-ui/react-tooltip 1.2.8
+2026-08-01T16:03:16.8108778Z + @tanstack/react-query 5.100.10
+2026-08-01T16:03:16.8109129Z + @turf/area 7.3.5
+2026-08-01T16:03:16.8109469Z + @turf/bbox 7.3.5
+2026-08-01T16:03:16.8109738Z + @vercel/og 0.6.8
+2026-08-01T16:03:16.8110173Z + class-variance-authority 0.7.1
+2026-08-01T16:03:16.8110504Z + clsx 2.1.1
+2026-08-01T16:03:16.8110760Z + cmdk 1.1.1
+2026-08-01T16:03:16.8111047Z + framer-motion 11.18.2
+2026-08-01T16:03:16.8111326Z + geist 1.7.0
+2026-08-01T16:03:16.8111584Z + katex 0.16.45
+2026-08-01T16:03:16.8111866Z + lucide-react 0.469.0
+2026-08-01T16:03:16.8112228Z + maplibre-gl 5.24.0
+2026-08-01T16:03:16.8112502Z + next 15.5.18
+2026-08-01T16:03:16.8112781Z + next-themes 0.4.6
+2026-08-01T16:03:16.8113056Z + nuqs 2.8.9
+2026-08-01T16:03:16.8113494Z + react 19.2.6
+2026-08-01T16:03:16.8113750Z + react-dom 19.2.6
+2026-08-01T16:03:16.8114035Z + react-hook-form 7.75.0
+2026-08-01T16:03:16.8114352Z + recharts 2.15.4
+2026-08-01T16:03:16.8114617Z + sonner 1.7.4
+2026-08-01T16:03:16.8114903Z + tailwind-merge 2.6.1
+2026-08-01T16:03:16.8115238Z + tailwindcss-animate 1.0.7
+2026-08-01T16:03:16.8115578Z + vaul 1.1.2
+2026-08-01T16:03:16.8115835Z + zod 3.25.76
+2026-08-01T16:03:16.8116087Z + zustand 5.0.13
+2026-08-01T16:03:16.8116252Z 
+2026-08-01T16:03:16.8116374Z devDependencies:
+2026-08-01T16:03:16.8116679Z + @playwright/test 1.60.0
+2026-08-01T16:03:16.8117334Z + @testing-library/jest-dom 6.9.1
+2026-08-01T16:03:16.8117725Z + @testing-library/react 16.3.2
+2026-08-01T16:03:16.8118112Z + @testing-library/user-event 14.6.1
+2026-08-01T16:03:16.8118483Z + @types/geojson 7946.0.16
+2026-08-01T16:03:16.8118810Z + @types/node 22.19.19
+2026-08-01T16:03:16.8119137Z + @types/react 19.2.14
+2026-08-01T16:03:16.8119449Z + @types/react-dom 19.2.3
+2026-08-01T16:03:16.8119800Z + @vitejs/plugin-react 4.7.0
+2026-08-01T16:03:16.8120139Z + autoprefixer 10.5.0
+2026-08-01T16:03:16.8120427Z + eslint 9.39.4
+2026-08-01T16:03:16.8120728Z + eslint-config-next 15.5.18
+2026-08-01T16:03:16.8121032Z + jsdom 25.0.1
+2026-08-01T16:03:16.8121284Z + postcss 8.5.14
+2026-08-01T16:03:16.8121556Z + prettier 3.8.3
+2026-08-01T16:03:16.8121915Z + prettier-plugin-tailwindcss 0.6.14
+2026-08-01T16:03:16.8122527Z + stylelint 16.26.1
+2026-08-01T16:03:16.8122862Z + stylelint-config-standard 36.0.1
+2026-08-01T16:03:16.8123096Z + tailwindcss 3.4.19
+2026-08-01T16:03:16.8123497Z + typescript 5.9.3
+2026-08-01T16:03:16.8123685Z + vitest 2.1.9
+2026-08-01T16:03:16.8123781Z 
+2026-08-01T16:03:16.8286217Z Done in 2.3s using pnpm v9.15.9
+2026-08-01T16:03:16.8561164Z ##[group]Run pnpm typecheck
+2026-08-01T16:03:16.8561498Z [36;1mpnpm typecheck[0m
+2026-08-01T16:03:16.8601319Z shell: /usr/bin/bash -e {0}
+2026-08-01T16:03:16.8601531Z env:
+2026-08-01T16:03:16.8601715Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-08-01T16:03:16.8601983Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-08-01T16:03:16.8602227Z ##[endgroup]
+2026-08-01T16:03:17.1520136Z 
+2026-08-01T16:03:17.1521047Z > aqualens-frontend@1.0.0 typecheck /home/runner/work/aqua-lens/aqua-lens/frontend
+2026-08-01T16:03:17.1521687Z > tsc --noEmit
+2026-08-01T16:03:17.1521853Z 
+2026-08-01T16:03:21.6508954Z ##[error]app/(app)/sessions/[id]/page.tsx(222,36): error TS2339: Property 'cloud_percentage' does not exist on type 'MonitoringSessionDetail'.
+2026-08-01T16:03:21.6928580Z  ELIFECYCLE  Command failed with exit code 2.
+2026-08-01T16:03:21.7206493Z ##[error]Process completed with exit code 2.
+2026-08-01T16:03:21.7306664Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-01T16:03:21.7307611Z Post job cleanup.
+2026-08-01T16:03:21.8435717Z Pruning is unnecessary.
+2026-08-01T16:03:21.8624627Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-01T16:03:21.8626257Z Post job cleanup.
+2026-08-01T16:03:21.9310825Z [command]/usr/bin/git version
+2026-08-01T16:03:21.9345262Z git version 2.54.0
+2026-08-01T16:03:21.9374724Z Temporarily overriding HOME='/home/runner/work/_temp/4fcd3fd1-80ed-40fe-8bf6-9a2c6a80ecd4' before making global git config changes
+2026-08-01T16:03:21.9375874Z Adding repository directory to the temporary git global config as a safe directory
+2026-08-01T16:03:21.9379242Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aqua-lens/aqua-lens
+2026-08-01T16:03:21.9410243Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-08-01T16:03:21.9439714Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-08-01T16:03:21.9647986Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-08-01T16:03:21.9668278Z http.https://github.com/.extraheader
+2026-08-01T16:03:21.9684207Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-08-01T16:03:21.9717149Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-08-01T16:03:21.9926115Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-08-01T16:03:21.9962531Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-08-01T16:03:22.0283916Z Cleaning up orphan processes
+2026-08-01T16:03:22.0521633Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

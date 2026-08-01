@@ -1,0 +1,71 @@
+# Render Blueprint — AquaLens backend (Free tier).
+#
+# Stack: Render free Web Service (Docker) + Vercel frontend + Supabase
+# Postgres + PostGIS + pgvector.
+#
+# All secret values are set from the Render dashboard via `sync: false`.
+services:
+  - type: web
+    name: aqualens-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/v1/health
+    envVars:
+      # --- Port ------------------------------------------------------------
+      # Render defaults PORT to 10000, but for Docker services it scans the
+      # port named by the Dockerfile's EXPOSE directive (8000). Pinning PORT
+      # to 8000 keeps the two in sync — otherwise the deploy fails with
+      # "Port scan timeout reached, no open ports detected".
+      - key: PORT
+        value: "8000"
+      # --- Supabase Postgres (session pooler — port 5432) -----------------
+      # Use the SESSION pooler (port 5432), NOT the direct connection
+      # (db.<ref>.supabase.co:5432). Render's free tier is IPv4-only;
+      # the direct connection is IPv6-only and will fail.
+      #
+      # Get the correct URL from: Supabase Dashboard → Settings → Database →
+      # Connection string → Session pooler tab.
+      - key: DATABASE_URL
+        sync: false
+
+      # --- Gemini ---------------------------------------------------------
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY_FALLBACK
+        sync: false
+      - key: GOOGLE_API_KEY_FALLBACK_2
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.0-flash
+      - key: GEMINI_EMBEDDING_MODEL
+        value: text-embedding-004
+
+      # --- Multi-agent layer ----------------------------------------------
+      - key: AQUALENS_AGENTIC_MODE
+        value: "true"
+
+      # --- Imagery + remote-sensing knobs ---------------------------------
+      # The backend auto-falls-back to sample imagery when Planetary Computer
+      # is down, so the pipeline always completes even during outages.
+      - key: PC_STAC_URL
+        value: https://earth-search.aws.element84.com/v1
+      - key: DEFAULT_LOOKBACK_DAYS
+        value: "30"
+      - key: MAX_CLOUD_COVER
+        value: "30"
+
+      # --- CORS -----------------------------------------------------------
+      # Comma-separated list of allowed origins. Set to your Vercel URL.
+      - key: CORS_ALLOW_ORIGINS
+        sync: false
+
+      # --- Ephemeral filesystem paths -------------------------------------
+      # `/tmp` is writable on Render free tier. PDFs are re-rendered on
+      # every download, so losing them on a cold start is a non-issue.
+      - key: UPLOAD_DIR
+        value: /tmp/aqualens/uploads
+      - key: REPORT_DIR
+        value: /tmp/aqualens/reports
