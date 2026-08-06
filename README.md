@@ -2,7 +2,7 @@
     Autonomous freshwater monitoring with a deterministic analysis core and a traceable Gemini agent layer.
 </div>
 
-Advisory only. AquaLens helps teams prioritize sampling locations. It does not certify water safety or replace laboratory testing.
+>Advisory only. AquaLens helps teams prioritize sampling locations. It does not certify water safety or replace laboratory testing.
 
 ## Overview
 
