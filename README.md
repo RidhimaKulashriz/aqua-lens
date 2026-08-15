@@ -32,7 +32,7 @@ The numeric pipeline is deterministic. The agent layer can explain and summarize
 Create a `.env` at the repo root and set at least:
 
 ```bash
-GOOGLE_API_KEY=sk-e63cd1444e6e19c9aeb2832dcfcacfc98a36ec7501ea6693a4bfc40fecae84ba
+GOOGLE_API_KEY=<set-this-in-your-local-environment>
 DATABASE_URL=sqlite:///./aqualens.db
 CORS_ALLOW_ORIGINS=http://localhost:3000
 ```
