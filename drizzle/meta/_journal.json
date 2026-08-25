@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1787655332973,
+      "tag": "0000_simple_brood",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1787655785019,
+      "tag": "0001_early_wonder_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787656742258,
+      "tag": "0002_parched_lake",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1787657627414,
+      "tag": "0003_illegal_blue_shield",
+      "breakpoints": true
+    }
+  ]
+}

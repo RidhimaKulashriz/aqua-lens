@@ -1,0 +1,34 @@
+# Project TODO
+
+- [x] Define DRIFT domain schema for assets, missions, telemetry, defects, severity history, repair estimates, reviews, reports, audit events, and evidence metadata.
+- [x] Apply database migration and add typed backend query helpers for the DRIFT data model.
+- [x] Add secure S3-backed evidence upload and metadata persistence for photos, video clips, annotated outputs, and reports.
+- [x] Implement a configurable drone hardware adapter with health, retry, safe fallback, and documented test endpoints.
+- [x] Implement a reliable simulator that creates virtual missions, telemetry, evidence, detections, alerts, map positions, repair estimates, and reports without physical hardware.
+- [x] Implement the ML inference adapter for pothole, crack, and structural-defect results with annotations, labels, confidence, and explainable severity inputs.
+- [x] Implement AI decision support for ZeroError prioritization and engineering-ready report narratives with clear manual-review fallback.
+- [x] Build tRPC procedures for mission operations, asset management, map filtering, evidence review, alerts, reports, role workspaces, and audit history.
+- [x] Build the tactile industrial dashboard with live defect map, maintenance queue, mission monitoring, alerts, evidence, and reports.
+- [x] Build dedicated administrator, engineer, and citizen views with appropriate actions and manual override controls.
+- [x] Add upload/playback flows, validation states, error handling, and filtering by asset, mission, defect type, severity, status, and review state.
+- [x] Write Vitest coverage for core scoring, simulator, hardware fallback, review override, and tRPC operations.
+- [x] Write GitHub-ready setup documentation, environment-variable guidance, integration-test guidance, and production deployment documentation.
+- [x] Verify responsive UI, backend flows, storage behavior, and demo-mode mission lifecycle in the browser.
+- [x] Save a project checkpoint and provide publish guidance for the verified deployment.
+- [ ] Push the fully completed and browser-verified codebase to the user’s selected GitHub repository.
+- [x] Add endpoint health-check and retry behavior for the configured drone hardware adapter, with documented success and failure tests.
+- [x] Persist simulator evidence and alert records, then surface alerts in the operations dashboard.
+- [x] Add backend APIs for asset lifecycle, alert actions, filtered map queries, report retrieval, and audit-history retrieval.
+- [x] Enforce administrator, engineer, and citizen role permissions server-side and expose distinct role-focused workspaces.
+- [x] Add UI filters for asset, mission, defect type, status, and review state, and verify evidence storage persistence through the completed simulator lifecycle.
+- [x] Extend Vitest coverage for simulator lifecycle, review override, hardware retry, and tRPC mission, evidence, report, and alert operations.
+- [x] Add complete frontend, backend, and ML-adapter deployment documentation and a tracked environment-template document without committing secrets.
+- [x] Document request-triggered hardware retry behavior and add success-path health-probe coverage.
+- [x] Complete asset update and deletion APIs and add a dedicated filtered map-data query.
+- [x] Add explicit administrator, engineer, and citizen application roles with server-authorized workspace access.
+- [x] Verify persisted simulator-evidence retrieval in the Evidence Vault after a clean simulator run while retaining authenticated access for original uploads.
+- [x] Add automated coverage for simulator creation, evidence-listing, report retrieval, alert listing, map-data retrieval, review override, and hardware retry behavior.
+- [x] Bind frontend workspace controls and permissions to authenticated backend role data instead of local-only role state.
+- [x] Add and verify distinct administrator, engineer, and citizen access flows with backend authorization coverage.
+- [x] Add protected-route tests proving citizen and engineer restrictions for administrator actions and citizen review restrictions.
+- [x] Browser-verify the administrator, engineer, and citizen workspace presentations, noting that authenticated deployment roles use the same backend permission matrix.
