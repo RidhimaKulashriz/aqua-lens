@@ -1,24 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
-  <title id="title">AquaLens risk model</title>
-  <desc id="desc">Five satellite contributors feed a weighted score, field evidence adds a bounded bonus, and the clamped result becomes low, medium, or high urgency.</desc>
-  <defs>
-    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#151525"/></linearGradient>
-    <filter id="shadow"><feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#000" flood-opacity=".32"/></filter>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#67e8f9"/></marker>
-  </defs>
-  <rect width="1600" height="620" rx="28" fill="url(#bg)"/>
-  <text x="60" y="62" fill="#e6f1ff" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="700">AquaLens / deterministic risk model</text>
-  <text x="60" y="94" fill="#8ca5b9" font-family="Inter,Arial,sans-serif" font-size="16">The AI narrative explains the result. It does not move the result.</text>
-  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
-    <g fill="#102a43" stroke="#60a5fa" stroke-width="2"><rect x="70" y="145" width="190" height="56" rx="13"/><rect x="70" y="223" width="190" height="56" rx="13"/><rect x="70" y="301" width="190" height="56" rx="13"/><rect x="70" y="379" width="190" height="56" rx="13"/><rect x="70" y="457" width="190" height="56" rx="13"/></g>
-    <g fill="#eff6ff" font-size="16" font-weight="700"><text x="165" y="179" text-anchor="middle">NDCI · 0.40</text><text x="165" y="257" text-anchor="middle">NDTI · 0.25</text><text x="165" y="335" text-anchor="middle">NDVI · 0.10</text><text x="165" y="413" text-anchor="middle">MNDWI · 0.10</text><text x="165" y="491" text-anchor="middle">NDWI · 0.15</text></g>
-    <rect x="390" y="260" width="245" height="95" rx="18" fill="#123b36" stroke="#2dd4bf" stroke-width="2"/><text x="512" y="299" text-anchor="middle" fill="#ecfeff" font-size="19" font-weight="700">Weighted base score</text><text x="512" y="326" text-anchor="middle" fill="#a7f3d0" font-size="14">normalise → combine → explain</text>
-    <rect x="745" y="260" width="245" height="95" rx="18" fill="#3b2a1f" stroke="#fbbf24" stroke-width="2"/><text x="867" y="299" text-anchor="middle" fill="#fef3c7" font-size="19" font-weight="700">Field evidence</text><text x="867" y="326" text-anchor="middle" fill="#fde68a" font-size="14">bounded bonus · max 0.50</text>
-    <rect x="1100" y="260" width="200" height="95" rx="18" fill="#30214d" stroke="#a78bfa" stroke-width="2"/><text x="1200" y="299" text-anchor="middle" fill="#f5f3ff" font-size="19" font-weight="700">Clamp 0 → 1</text><text x="1200" y="326" text-anchor="middle" fill="#ddd6fe" font-size="14">stable final score</text>
-    <g><rect x="1360" y="145" width="170" height="72" rx="16" fill="#123b36" stroke="#34d399" stroke-width="2"/><text x="1445" y="177" text-anchor="middle" fill="#d1fae5" font-size="18" font-weight="700">LOW</text><text x="1445" y="199" text-anchor="middle" fill="#a7f3d0" font-size="13">0.00–0.32 · routine</text></g>
-    <g><rect x="1360" y="260" width="170" height="72" rx="16" fill="#4a3512" stroke="#fbbf24" stroke-width="2"/><text x="1445" y="292" text-anchor="middle" fill="#fef3c7" font-size="18" font-weight="700">MEDIUM</text><text x="1445" y="314" text-anchor="middle" fill="#fde68a" font-size="13">0.33–0.65</text></g>
-    <g><rect x="1360" y="375" width="170" height="72" rx="16" fill="#4c2020" stroke="#fb7185" stroke-width="2"/><text x="1445" y="407" text-anchor="middle" fill="#ffe4e6" font-size="18" font-weight="700">HIGH</text><text x="1445" y="429" text-anchor="middle" fill="#fecdd3" font-size="13">0.66–1.00</text></g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="570" viewBox="0 0 1400 570" role="img" aria-labelledby="title desc">
+  <title id="title">AquaLens deterministic risk calculation</title>
+  <desc id="desc">A table of five normalised spectral contributors and their weights, followed by a bounded latest-evidence adjustment, score clamp and risk thresholds.</desc>
+  <rect width="1400" height="570" fill="#10171d"/>
+  <text x="42" y="48" fill="#dfe8eb" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="600" letter-spacing="1.8">DETERMINISTIC RISK MODEL</text>
+  <text x="1358" y="48" fill="#84969d" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" letter-spacing="1.4">PURE FUNCTION · BOUNDED OUTPUT</text>
+  <line x1="42" y1="72" x2="1358" y2="72" stroke="#34434b" stroke-width="1"/>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="62" y="111" fill="#83b8bd" font-size="12" font-weight="700" letter-spacing="1.4">BASE SCORE / NORMALISED SPECTRAL INPUTS</text>
+    <text x="1020" y="111" fill="#84969d" font-size="11" text-anchor="end" letter-spacing="1.2">WEIGHT</text>
+    <text x="1338" y="111" fill="#84969d" font-size="11" text-anchor="end" letter-spacing="1.2">NORMALISATION</text>
+
+    <g stroke="#34434b" stroke-width="1">
+      <line x1="62" y1="132" x2="1338" y2="132"/>
+      <line x1="62" y1="190" x2="1338" y2="190"/>
+      <line x1="62" y1="248" x2="1338" y2="248"/>
+      <line x1="62" y1="306" x2="1338" y2="306"/>
+      <line x1="62" y1="364" x2="1338" y2="364"/>
+      <line x1="62" y1="422" x2="1338" y2="422"/>
+    </g>
+
+    <g fill="#e0e8eb" font-size="15" font-weight="600">
+      <text x="62" y="168">NDCI · chlorophyll proxy</text>
+      <text x="62" y="226">NDTI · turbidity proxy</text>
+      <text x="62" y="284">NDVI · vegetation signal</text>
+      <text x="62" y="342">MNDWI · water-signal floor</text>
+      <text x="62" y="400">NDWI · water-signal floor</text>
+    </g>
+
+    <g fill="#83b8bd" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="600" text-anchor="end">
+      <text x="1020" y="168">0.40</text>
+      <text x="1020" y="226">0.25</text>
+      <text x="1020" y="284">0.10</text>
+      <text x="1020" y="342">0.10</text>
+      <text x="1020" y="400">0.15</text>
+    </g>
+
+    <g fill="#95a5ab" font-size="13" text-anchor="end">
+      <text x="1338" y="168">[-0.1, 0.5]</text>
+      <text x="1338" y="226">[-0.2, 0.6]</text>
+      <text x="1338" y="284">[0.0, 0.6]</text>
+      <text x="1338" y="342">1 − norm(MNDWI, 0, 0.5)</text>
+      <text x="1338" y="400">1 − norm(NDWI, 0, 0.5)</text>
+    </g>
+
+    <text x="62" y="455" fill="#83b8bd" font-size="12" font-weight="700" letter-spacing="1.4">LATEST FIELD-EVIDENCE ADJUSTMENT</text>
+    <text x="62" y="481" fill="#95a5ab" font-size="13">Algae · suspicious colour / odour · dead fish · complaints · rainfall</text>
+    <text x="1338" y="481" fill="#e0e8eb" font-size="14" font-weight="600" text-anchor="end">BONUS CAP: 0.50</text>
+
+    <line x1="62" y1="500" x2="1338" y2="500" stroke="#34434b" stroke-width="1"/>
+    <text x="62" y="533" fill="#e0e8eb" font-size="15" font-weight="600">FINAL = clamp(base score + evidence bonus, 0, 1)</text>
+
+    <g font-size="12" font-weight="700" text-anchor="middle">
+      <rect x="810" y="514" width="145" height="32" fill="#182d2c" stroke="#527d73" stroke-width="1"/>
+      <text x="882" y="535" fill="#b9d8ca">LOW &lt; 0.33</text>
+      <rect x="965" y="514" width="175" height="32" fill="#302d23" stroke="#8b805c" stroke-width="1"/>
+      <text x="1052" y="535" fill="#dfd2a6">MEDIUM &lt; 0.66</text>
+      <rect x="1150" y="514" width="188" height="32" fill="#352527" stroke="#98686a" stroke-width="1"/>
+      <text x="1244" y="535" fill="#e6babb">HIGH ≥ 0.66</text>
+    </g>
   </g>
-  <g stroke="#67e8f9" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M260 173 C315 173 330 280 385 280"/><path d="M260 251 C315 251 330 290 385 290"/><path d="M260 329H385"/><path d="M260 407 C315 407 330 320 385 320"/><path d="M260 485 C315 485 330 330 385 330"/><path d="M635 307H740"/><path d="M990 307H1095"/><path d="M1300 280 C1330 250 1335 190 1355 190"/><path d="M1300 307H1355"/><path d="M1300 335 C1330 365 1335 410 1355 410"/></g>
-  <text x="800" y="555" fill="#8ca5b9" font-family="Inter,Arial,sans-serif" font-size="15" text-anchor="middle">Evidence examples: algae · suspicious colour or odour · dead fish · complaints · rainfall</text>
 </svg>
