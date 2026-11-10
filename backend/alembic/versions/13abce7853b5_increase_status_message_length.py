@@ -21,20 +21,20 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.alter_column(
-        'monitoring_sessions',
-        'status_message',
-        existing_type=sa.String(length=500),
-        type_=sa.String(length=2000),
-        existing_nullable=True
-    )
+    with op.batch_alter_table("monitoring_sessions") as batch_op:
+        batch_op.alter_column(
+            "status_message",
+            existing_type=sa.String(length=500),
+            type_=sa.String(length=2000),
+            existing_nullable=True,
+        )
 
 
 def downgrade() -> None:
-    op.alter_column(
-        'monitoring_sessions',
-        'status_message',
-        existing_type=sa.String(length=2000),
-        type_=sa.String(length=500),
-        existing_nullable=True
-    )
+    with op.batch_alter_table("monitoring_sessions") as batch_op:
+        batch_op.alter_column(
+            "status_message",
+            existing_type=sa.String(length=2000),
+            type_=sa.String(length=500),
+            existing_nullable=True,
+        )
