@@ -1,322 +1,425 @@
 <div align="center">
-    Autonomous freshwater monitoring with a deterministic analysis core and a traceable Gemini agent layer.
+  <img src="assets/logo-animated.svg" alt="AquaLens" width="170" />
+
+  # AquaLens
+
+  ### Turn satellite signals and field observations into an auditable freshwater monitoring brief.
+
+  <p>
+    A full-stack platform for monitoring water bodies with Sentinel-2 imagery,
+    deterministic spectral analysis, field evidence, and a traceable agent layer.
+  </p>
+
+  <p>
+    <a href="#quick-start">Quick start</a> ·
+    <a href="#how-it-works">How it works</a> ·
+    <a href="docs/user_manual.md">User manual</a> ·
+    <a href="docs/architecture.md">Architecture</a> ·
+    <a href="docs/api_contract.md">API contract</a>
+  </p>
 </div>
 
->Advisory only. AquaLens helps teams prioritize sampling locations. It does not certify water safety or replace laboratory testing.
+> **Advisory only.** AquaLens helps teams prioritise sampling locations and interpret environmental signals. It does **not** certify water safety, detect toxins, or replace laboratory testing and professional judgment.
 
-## Overview
+---
 
-AquaLens is a full-stack web app for freshwater monitoring. A user searches for a place, drops a map pin, or enters coordinates. The backend buffers that point into a monitoring polygon, fetches Sentinel-2 imagery, computes six water-quality spectral indices, and produces a deterministic risk assessment. A separate Gemini-powered agent workflow writes the human-facing field brief and citizen summary, while the backend stores the full session trace and report artifacts.
+## Why AquaLens?
 
-The numeric pipeline is deterministic. The agent layer can explain and summarize results, but it cannot change the risk score.
+Freshwater monitoring is often split between satellite data, field notes, spreadsheets, and disconnected reports. AquaLens brings those pieces into one repeatable workflow:
 
-## What’s in the repo
+- Define a water body by searching for a place, entering coordinates, drawing a polygon, or using a buffered point.
+- Retrieve the best available Sentinel-2 L2A scene for the selected area and date window.
+- Compute six explainable spectral indices over the water mask.
+- Produce a deterministic risk score before any language-model narrative is generated.
+- Add observations from the field, including water appearance, odour, algae, rainfall, complaints, dead fish, notes, and photos.
+- Keep the full session history, evidence, report, and agent execution trace together.
 
-- `backend/` FastAPI, SQLModel, Alembic, pipeline logic, agent orchestration, PDF generation, and pytest coverage.
-- `frontend/` Next.js 15 App Router UI with map, session, evidence, and marketing surfaces.
-- `docs/` Architecture, API contract, risk model, spectral indices, and user manual.
-- `scripts/` Convenience launch scripts for backend and frontend.
-- `docker-compose.yml` Local PostGIS, backend, and frontend stack.
+The result is a monitoring brief that is easier to inspect, compare, share, and act on.
 
-## Quick Start
+## What makes it different
+
+### Deterministic risk, contextual narrative
+
+AquaLens separates the numeric decision from the explanation. The risk model is a weighted, unit-tested calculation over spectral and field signals. The Gemini-powered layer can explain the result in plain language, but it cannot change the score, risk band, or urgency.
+
+### Satellite analysis that remains inspectable
+
+The platform stores derived index statistics and scene metadata rather than raw GeoTIFFs. Each index includes its value, range, variation, sample count, band inputs, and an interpretation string.
+
+### Evidence-aware monitoring
+
+Remote sensing is complemented by what people can see and report on the ground. New evidence triggers a background rescore, so a session can evolve as observations arrive.
+
+### Traceability by default
+
+Agent plans, sub-agent runs, tool calls, token usage, latency, fallbacks, and failures are persisted when the agentic mode is enabled. Degraded behaviour is visible rather than silent.
+
+---
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Choose a water body] --> B[Select date window]
+    B --> C[Search Sentinel-2 L2A]
+    C --> D[Build water mask]
+    D --> E[Compute six indices]
+    E --> F[Deterministic risk score]
+    F --> G[Add field evidence]
+    G --> H[Background rescore]
+    F --> I[Agent explanation]
+    I --> J[Traceable field brief]
+    H --> K[Downloadable PDF report]
+    J --> K
+```
+
+### Monitoring flow
+
+1. Create or select a **water body**. AquaLens stores its geometry, centroid, area, and source.
+2. Start a **monitoring session** with a date range and cloud-cover ceiling.
+3. The backend searches the configured STAC provider, reads imagery, and analyses the selected polygon.
+4. The pipeline calculates six indices over pixels classified as water.
+5. The deterministic risk model produces a score, level, urgency, contributors, recommendation, and limitations.
+6. If enabled and configured, the agent layer coordinates Scout, Historian, Analyst, and Reporter stages to produce a human-facing explanation and citizen summary.
+7. Add **field evidence** whenever new observations become available. The session is rescored in the background.
+8. Inspect the complete session or download a regenerated PDF report.
+
+---
+
+## Analysis included
+
+AquaLens calculates six normalised band-math indices from Sentinel-2 L2A surface reflectance:
+
+| Index | Signal | Formula |
+| --- | --- | --- |
+| **NDWI** | Open-water signal and water mask | `(NIR − SWIR) / (NIR + SWIR)` |
+| **MNDWI** | Water signal with reduced built-up confusion | `(Green − SWIR) / (Green + SWIR)` |
+| **NDTI** | Turbidity proxy | `(Red − Green) / (Red + Green)` |
+| **NDCI** | Chlorophyll-a proxy | `(Red Edge − Red) / (Red Edge + Red)` |
+| **NDVI** | Floating biomass and shoreline vegetation stress | `(NIR − Red) / (NIR + Red)` |
+| **WRI** | Moisture / open-water ratio | `(Green + Red) / (NIR + SWIR)` |
+
+For every index, the pipeline records masked mean, minimum, maximum, standard deviation, sample count, band provenance, and a plain-language interpretation.
+
+> An elevated chlorophyll proxy is a signal for follow-up—not a toxin measurement or a diagnosis of harmful algal bloom toxicity.
+
+Read the full methodology in [`docs/spectral_indices.md`](docs/spectral_indices.md) and [`docs/risk_model.md`](docs/risk_model.md).
+
+## Risk model
+
+The score is computed in five transparent stages:
+
+1. Normalise NDCI, NDTI, shoreline NDVI, MNDWI, and NDWI signals into bounded ranges.
+2. Combine them with fixed weights: NDCI `0.40`, NDTI `0.25`, shoreline NDVI `0.10`, MNDWI floor `0.10`, and NDWI floor `0.15`.
+3. Add a bounded field-evidence bonus for signals such as visible algae, suspicious colour or odour, dead fish, complaints, and recent rainfall.
+4. Clamp the final score to `[0, 1]`.
+5. Bucket it into `low`, `medium`, or `high`, then derive urgency from the risk level and severe field signals.
+
+The language model receives the structured result and is explicitly prevented from inventing measurements, changing the score, changing urgency, or making public-safety guarantees.
+
+---
+
+## Repository map
+
+```text
+.
+├── backend/                 FastAPI service, pipeline, models, migrations, reports, tests
+├── frontend/                Next.js 15 App Router application
+├── docs/                    Architecture, API, methodology, agent layer, and user guide
+├── infrastructure/          Render and deployment configuration
+├── scripts/                 Local development launch scripts
+├── assets/                  Brand assets
+├── docker-compose.yml        PostGIS + backend + frontend development stack
+└── README.md
+```
+
+### Technology stack
+
+| Layer | Technologies |
+| --- | --- |
+| Web app | Next.js 15, React 19, TypeScript, Tailwind CSS, MapLibre GL |
+| Data fetching | TanStack Query, typed API client, Zod validation |
+| API | FastAPI, Pydantic v2, Uvicorn |
+| Persistence | SQLModel / SQLAlchemy, Alembic, SQLite for lightweight local runs, Postgres + PostGIS in the full stack |
+| Earth observation | STAC search, Sentinel-2 L2A, Rasterio, NumPy, Shapely, PyProj |
+| Agent layer | Gemini API, structured JSON output, tool-enabled stages, optional vector memory |
+| Reporting | Jinja2 templates and WeasyPrint PDF generation |
+| Quality | Pytest, Ruff, Black, Vitest, TypeScript checks, Playwright |
+
+---
+
+## Quick start
 
 ### Prerequisites
 
-- Python 3.11 or newer
-- Node.js 20 or newer
-- pnpm 9
-- Docker and Docker Compose if you want the containerized stack
+- Python **3.11+**
+- Node.js **20+**
+- pnpm **9**
+- Docker and Docker Compose for the PostGIS stack
+- A Gemini API key for live narrative generation, or the fake mode for deterministic local runs
 
-### Environment variables
-
-Create a `.env` at the repo root and set at least:
+### 1. Clone and configure
 
 ```bash
-GOOGLE_API_KEY=<set-this-in-your-local-environment>
+git clone https://github.com/RidhimaKulashriz/aqua-lens.git
+cd aqua-lens
+touch .env
+```
+
+Set at least the following values in `.env`:
+
+```dotenv
+GOOGLE_API_KEY=your-gemini-api-key
 DATABASE_URL=sqlite:///./aqualens.db
 CORS_ALLOW_ORIGINS=http://localhost:3000
 ```
 
-Optional flags:
+For a key-free local run, use the deterministic fallback:
 
-- `GOOGLE_API_KEY_FALLBACK`
-- `GOOGLE_API_KEY_FALLBACK_2`
-- `GEMINI_MODEL`
-- `AQUALENS_FAKE_GEMINI=1` for deterministic local runs
-- `AQUALENS_USE_SAMPLE_PROVIDER=1` for sample imagery in tests and demos
-- `AQUALENS_AGENTIC_MODE=0` to force the single-call reasoning path
+```dotenv
+AQUALENS_FAKE_GEMINI=1
+AQUALENS_USE_SAMPLE_PROVIDER=1
+```
 
-Do not commit API keys to the repository.
+Never commit API keys or other secrets.
 
-### Run locally with scripts
+### 2. Start the backend
 
-Backend:
+The convenience script creates or repairs `backend/.venv`, installs dependencies, runs migrations, and starts the API with reload enabled:
 
 ```bash
 ./scripts/run-backend.sh
 ```
 
-Frontend:
+The API is available at:
+
+- REST API: `http://localhost:8000/api/v1`
+- Swagger UI: `http://localhost:8000/docs`
+- OpenAPI JSON: `http://localhost:8000/openapi.json`
+- Health check: `http://localhost:8000/api/v1/health`
+
+### 3. Start the frontend
+
+In a second terminal:
 
 ```bash
 ./scripts/run-frontend.sh
 ```
 
-These scripts bootstrap a backend virtual environment and a frontend pnpm install if needed.
+Open `http://localhost:3000`.
 
-### Run with Docker
+The frontend defaults to `http://localhost:8000` for the API. Override it when needed:
+
+```bash
+NEXT_PUBLIC_API_URL=https://your-api.example.com \
+NEXT_PUBLIC_SITE_URL=https://your-app.example.com \
+./scripts/run-frontend.sh
+```
+
+---
+
+## Run the complete stack with Docker
+
+Docker Compose starts PostGIS, the backend, and the Next.js frontend:
 
 ```bash
 docker compose up --build
 ```
 
-This starts PostGIS on port 5432, the backend on 8000, and the frontend on 3000.
+| Service | URL / port |
+| --- | --- |
+| Frontend | `http://localhost:3000` |
+| Backend | `http://localhost:8000` |
+| Swagger UI | `http://localhost:8000/docs` |
+| PostGIS | `localhost:5432` |
 
-### Run without Docker
+The default database credentials in the compose file are intended for local development only. Change them before using a shared or production environment.
 
-**Backend** — Python 3.11+:
+Stop the stack while keeping volumes:
 
 ```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-alembic upgrade head
-uvicorn app.main:app --reload --reload-dir app --host 0.0.0.0 --port 8000
+docker compose down
 ```
 
-**Frontend** — pnpm + Node 20+:
+Remove the local database, uploads, reports, and Node modules volumes too:
 
 ```bash
-cd frontend
-pnpm install
-pnpm dev
+docker compose down -v
 ```
 
 ---
 
 ## Configuration
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `AQUALENS_AGENTIC_MODE` | `true` | Enables the Coordinator → Scout → Historian → Analyst → Reporter orchestration. When off, only Pipeline 1 + the deterministic narrator run. |
-| `AQUALENS_FAKE_GEMINI` | `0` | Skips real Gemini calls; uses the deterministic narrator and a canned citizen summary. Used by CI. |
-| `AQUALENS_AGENT_STEP_DELAY_MS` | `0` | Optional delay between agent stages for visible live-sequencing in demos. |
-| `GEMINI_MODEL` | `gemini-2.0-flash` | Runtime Gemini model ID. |
-| `GEMINI_EMBED_MODEL` | `text-embedding-004` | Used by the Historian's pgvector memory. |
-| `REPORT_DIR` | `backend/data/reports` | Where regenerated PDFs are cached on disk. |
-| `MAX_UPLOAD_BYTES` | `8388608` (8 MB) | Field-evidence photo upload ceiling. |
-| `WATER_FRACTION_LAND_THRESHOLD` | `0.2` | Below this, the AOI is classified as land; agents are skipped. |
-| `WATER_FRACTION_MIXED_THRESHOLD` | `0.7` | Below this (and ≥ land), the AOI is classified as mixed. |
+The backend loads settings from environment variables and the repository-root `.env` file. Important options include:
 
-Full schema: [`backend/app/core/config.py`](backend/app/core/config.py).
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `DATABASE_URL` | `sqlite:///./aqualens.db` | SQLAlchemy database URL. |
+| `CORS_ALLOW_ORIGINS` | `http://localhost:3000` | Comma-separated allowed frontend origins. |
+| `GOOGLE_API_KEY` | unset | Primary Gemini API key. |
+| `GOOGLE_API_KEY_FALLBACK` | unset | Fallback key for quota or rate-limit recovery. |
+| `GOOGLE_API_KEY_FALLBACK_2` | unset | Second fallback key. |
+| `GEMINI_MODEL` | `gemini-2.0-flash` | Gemini model used by the reasoning service. |
+| `GEMINI_EMBEDDING_MODEL` | `text-embedding-004` | Embeddings model for semantic agent memory. |
+| `PC_STAC_URL` | Earth Search STAC | STAC endpoint used for satellite scenes. |
+| `DEFAULT_LOOKBACK_DAYS` | `30` | Default monitoring lookback window. |
+| `MAX_CLOUD_COVER` | `30` | Default maximum scene cloud cover percentage. |
+| `AQUALENS_AGENTIC_MODE` | `true` | Enables Coordinator → Scout / Historian / Analyst / Reporter orchestration. |
+| `AQUALENS_FAKE_GEMINI` | `false` | Uses deterministic local narrative fallbacks instead of Gemini. |
+| `AQUALENS_USE_SAMPLE_PROVIDER` | `false` | Uses sample imagery for tests and demos. |
+| `AQUALENS_AGENT_STEP_DELAY_MS` | `0` | Adds visible delay between agent stages for demonstrations. |
+| `UPLOAD_DIR` | `data/uploads` | Evidence-photo storage directory. |
+| `REPORT_DIR` | `data/reports` | Generated report directory. |
+
+The canonical settings implementation is [`backend/app/core/config.py`](backend/app/core/config.py).
 
 ---
 
-## API surface
+## API at a glance
 
-All endpoints are mounted under **`/api/v1`**. Full payload schemas in [`docs/api_contract.md`](docs/api_contract.md); the live OpenAPI document is at `/docs` when the backend is running.
+All public endpoints are mounted below `/api/v1`.
 
 ### Water bodies
 
-| Verb | Path | Notes |
-|---|---|---|
-| `GET` | `/water-bodies` | List saved AOIs. |
-| `POST` | `/water-bodies` | Create from a GeoJSON polygon or a buffered point. |
-| `GET` | `/water-bodies/{id}` | Single AOI with centroid + area. |
-| `PATCH` | `/water-bodies/{id}` | Rename / re-describe. |
-| `DELETE` | `/water-bodies/{id}` | Cascade-deletes child sessions. |
-| `POST` | `/water-bodies/bulk-delete` | Transactional multi-select delete. |
+```text
+GET    /water-bodies
+POST   /water-bodies
+GET    /water-bodies/{id}
+PATCH  /water-bodies/{id}
+DELETE /water-bodies/{id}
+POST   /water-bodies/bulk-delete
+```
 
-### Sessions
+### Monitoring sessions
 
-| Verb | Path | Notes |
-|---|---|---|
-| `POST` | `/sessions` | Kick off a new monitoring run. Returns immediately; pipeline runs in the background. |
-| `GET` | `/sessions` | Paginated list, optionally filtered by `water_body_id`. |
-| `GET` | `/sessions/{id}` | Full detail (status, indices, risk, citizen summary, evidence). |
-| `GET` | `/sessions/{id}/indices` | The six computed indices with provenance. |
-| `GET` | `/sessions/{id}/risk` | The risk row (level, urgency, recommendation, reasoning, limitations). |
-| `POST` `GET` | `/sessions/{id}/evidence` | Submit / list field-evidence rows (re-scores the session). |
-| `GET` | `/sessions/{id}/trace` | Multi-agent execution trace (404 when the agent layer was off). |
-| `GET` | `/sessions/{id}/field-brief` | Legacy compatibility endpoint (404 when absent). |
-| `GET` | `/sessions/{id}/report` | WeasyPrint PDF, re-rendered on every request so template fixes ship instantly. Downloads as `aqualens-analysis-YYYYMMDD.pdf`. |
+```text
+POST   /sessions
+GET    /sessions
+GET    /sessions/{id}
+GET    /sessions/{id}/indices
+GET    /sessions/{id}/risk
+GET    /sessions/{id}/trace
+GET    /sessions/{id}/report
+```
 
-### System
+### Field evidence
 
-| Verb | Path | Notes |
-|---|---|---|
-| `GET` | `/health` | Liveness probe. Returns `{"status":"ok"}`. |
+```text
+POST   /sessions/{id}/evidence
+GET    /sessions/{id}/evidence
+```
+
+Creating a session returns immediately with `status="pending"`; the frontend polls until it becomes `complete` or `failed`. Submitting evidence schedules a background rescore.
+
+Use the live Swagger UI for interactive requests and [`docs/api_contract.md`](docs/api_contract.md) for payloads, response shapes, and error conventions.
 
 ---
 
-## Data model
+## Agent layer
+
+When `AQUALENS_AGENTIC_MODE=true` and a Gemini key is available, the narrative workflow is organised into specialised stages:
 
 ```mermaid
-erDiagram
-    WATER_BODIES ||--o{ MONITORING_SESSIONS : has
-    MONITORING_SESSIONS ||--o{ SPECTRAL_INDICES : produces
-    MONITORING_SESSIONS ||--o| RISK_ASSESSMENTS : has
-    MONITORING_SESSIONS ||--o{ FIELD_EVIDENCE : has
-    MONITORING_SESSIONS ||--o| REPORTS : has
-    MONITORING_SESSIONS ||--o| AGENT_TRACES : has
-    WATER_BODIES ||--o{ AGENT_MEMORY : remembers
-    RISK_ASSESSMENTS ||--o| AGENT_TRACES : linked_to
-
-    WATER_BODIES {
-        UUID id PK
-        string name
-        geometry polygon
-        point centroid
-        float area_km2
-        string source
-    }
-    MONITORING_SESSIONS {
-        UUID id PK
-        UUID water_body_id FK
-        date start_date
-        date end_date
-        float max_cloud_cover
-        string status
-        string status_message
-        string scene_id
-        datetime scene_capture_date
-        float scene_cloud_cover
-        float water_fraction
-        string aoi_type
-    }
-    SPECTRAL_INDICES {
-        UUID id PK
-        UUID session_id FK
-        string name
-        float value
-        float min_value
-        float max_value
-        float stddev
-        int sample_count
-        json bands
-        string interpretation
-    }
-    RISK_ASSESSMENTS {
-        UUID id PK
-        UUID session_id FK
-        UUID agent_trace_id FK
-        float score
-        string level
-        string urgency
-        string recommendation
-        string reasoning
-        string limitations
-        json contributors
-        json field_brief
-        string model_id
-    }
-    AGENT_TRACES {
-        UUID id PK
-        UUID session_id FK
-        json coordinator_plan
-        json agent_runs
-        int total_tokens_in
-        int total_tokens_out
-        int total_latency_ms
-        string gemini_model
-    }
-    AGENT_MEMORY {
-        UUID id PK
-        UUID water_body_id FK
-        string note
-        vector embedding
-        datetime created_at
-        bool archived
-    }
-    FIELD_EVIDENCE {
-        UUID id PK
-        UUID session_id FK
-        string water_color
-        string odor
-        bool algae_present
-        int dead_fish_count
-        float rainfall_mm
-        int complaints_count
-        string photo_path
-        string notes
-    }
-    REPORTS {
-        UUID id PK
-        UUID session_id FK
-        string file_path
-        int byte_size
-    }
+flowchart LR
+    C[Coordinator\nplans the work] --> S[Scout\nvisual and scene context]
+    C --> H[Historian\nprior memory and context]
+    S --> A[Analyst\ndraft and critique]
+    H --> A
+    A --> R[Reporter\nplain-language summary]
+    H <--> M[(Agent memory)]
+    C -.-> T[(Trace)]
+    S -.-> T
+    H -.-> T
+    A -.-> T
+    R -.-> T
 ```
 
-Migrations live in `backend/alembic/versions/` and are applied via `alembic upgrade head`.
+- **Coordinator** chooses the workflow.
+- **Scout** gathers scene and visual context.
+- **Historian** recalls and writes water-body-specific observations when memory is available.
+- **Analyst** turns structured signals into an evidence-grounded draft and critique.
+- **Reporter** produces the citizen-facing summary.
+
+The agent layer is optional. With it disabled—or when fake mode is enabled—the deterministic pipeline still produces a usable result through the fallback narrator and summary paths.
+
+Read the detailed design in [`docs/agent_layer.md`](docs/agent_layer.md) and [`docs/architecture.md`](docs/architecture.md).
 
 ---
 
-## Failure modes &amp; fallbacks
+## Testing and quality checks
 
-Every layer has a deterministic safety net so a session always produces a usable brief:
-
-| Failure | Fallback |
-|---|---|
-| Gemini primary key 429 / quota | Roll over to `GOOGLE_API_KEY_FALLBACK[_2]`. |
-| Coordinator parse error | Baseline plan: Scout + Analyst + Reporter (Historian when history exists). |
-| Scout vision timeout | Use freshest STAC candidate under the cloud-cover ceiling. |
-| Historian failure | Analyst runs without the briefing; memory write is skipped. |
-| Analyst failure | Deterministic narrator from `app.services.reasoning._fake_bundle`. |
-| Reporter failure | Deterministic citizen summary from `app.services.citizen_summary`. |
-| AOI classified as land or mixed | Pipeline 2 is skipped entirely (no Gemini cost); UI shows a *Not water* badge and the citizen summary explains why. |
-| WeasyPrint render error | API returns 500 with the original message; cached PDFs are never served stale because regeneration happens on every download. |
-
-All failures are recorded in the per-session trace — degraded behaviour is never silent.
-
----
-
-## Tests &amp; quality gates
+### Backend
 
 ```bash
-# Backend
 cd backend
-.venv/bin/python -m pytest -q            # ~90 tests in <10s on SQLite
-.venv/bin/ruff check . && .venv/bin/black --check app/ tests/ alembic/
-
-# Frontend
-cd frontend
-pnpm typecheck      # tsc --noEmit (strict)
-pnpm lint           # next lint
-pnpm test           # vitest unit tests
-pnpm e2e            # Playwright against the compose stack
+python -m pytest -q
+python -m ruff check .
+python -m black --check app/ tests/ alembic/
 ```
 
-CI runs every gate plus the WeasyPrint smoke test on each PR.
+### Frontend
+
+```bash
+cd frontend
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm e2e
+```
+
+The end-to-end suite expects the application stack to be available. For fast, repeatable backend development, use SQLite with the sample provider and fake Gemini mode.
 
 ---
 
 ## Deployment
 
-| Surface | Provider | Notes |
-|---|---|---|
-| Backend | Render (Docker) | Blueprint in [`infrastructure/render.yaml`](infrastructure/render.yaml). |
-| Frontend | Vercel | Config in [`infrastructure/vercel.json`](infrastructure/vercel.json). |
-| Database | Postgres 16 + PostGIS + pgvector | Pinned in `docker-compose.yml` for local; managed Postgres in production. |
+The repository includes deployment configuration for a split deployment:
 
-Walkthrough: [`infrastructure/deployment.md`](infrastructure/deployment.md).
+- **Frontend:** Vercel configuration in [`frontend/vercel.json`](frontend/vercel.json)
+- **Backend:** Render blueprint in [`infrastructure/render.yaml`](infrastructure/render.yaml)
+- **Database:** Postgres 16 with PostGIS; pgvector is used for semantic agent memory where available
 
----
-
-## License
-
-Source code and documentation are unlicensed. Third-party notices in [NOTICE.md](NOTICE.md).
-
-Sentinel-2 imagery © European Union, contains modified Copernicus Sentinel data accessed via the Microsoft Planetary Computer.
+See [`infrastructure/deployment.md`](infrastructure/deployment.md) before deploying. Configure production CORS, database credentials, secret keys, persistent upload/report storage, and the public frontend/API URLs for your environment.
 
 ---
 
-## Deployment Links
+## Safety and limitations
 
-- **Frontend:** [https://frontend-eight-gamma-82.vercel.app](https://frontend-eight-gamma-82.vercel.app)
-- **Backend API:** [https://aqua-lens-backend.onrender.com](https://aqua-lens-backend.onrender.com)
+AquaLens is designed to make monitoring more consistent—not to make unsupported environmental or public-health claims.
 
-## Author
+- Satellite indices are proxies and are affected by cloud cover, spatial resolution, atmospheric conditions, mixed pixels, and water-mask quality.
+- The risk score is a prioritisation signal, not a regulatory classification or laboratory result.
+- LLM-generated prose is constrained by the structured inputs but still requires human review.
+- Land or mixed-area classifications skip the agent pipeline and are reported as not-water conditions.
+- Uploaded field photos have EXIF metadata stripped before storage, including embedded GPS where present.
+- Raw GeoTIFF imagery is not persisted; derived statistics and provider metadata are stored instead.
 
-**RidhimaKulashriz** — GitHub [@RidhimaKulashriz](https://github.com/RidhimaKulashriz)
+For the full limitations and methodology, see [`docs/user_manual.md`](docs/user_manual.md), [`docs/spectral_indices.md`](docs/spectral_indices.md), and [`docs/risk_model.md`](docs/risk_model.md).
+
+---
+
+## Documentation
+
+| Document | What it covers |
+| --- | --- |
+| [`docs/user_manual.md`](docs/user_manual.md) | End-user workflow and interface guide |
+| [`docs/architecture.md`](docs/architecture.md) | System design, data flow, and module map |
+| [`docs/api_contract.md`](docs/api_contract.md) | REST endpoints and payload contracts |
+| [`docs/spectral_indices.md`](docs/spectral_indices.md) | Bands, formulas, masking, and aggregation |
+| [`docs/risk_model.md`](docs/risk_model.md) | Deterministic score, evidence bonus, and urgency |
+| [`docs/agent_layer.md`](docs/agent_layer.md) | Agent roles, tools, memory, and failure handling |
+| [`infrastructure/deployment.md`](infrastructure/deployment.md) | Production deployment walkthrough |
+
+---
+
+## Live deployment
+
+- **Frontend:** [frontend-eight-gamma-82.vercel.app](https://frontend-eight-gamma-82.vercel.app)
+- **Backend API:** [aqua-lens-backend.onrender.com](https://aqua-lens-backend.onrender.com)
+
+---
+
+<div align="center">
+  <sub>Built for clearer, more explainable freshwater monitoring.</sub>
+</div>
