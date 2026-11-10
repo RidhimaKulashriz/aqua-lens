@@ -1,0 +1,18 @@
+flowchart LR
+    A([Choose water body]) --> B([Select date range])
+    B --> C([Find Sentinel-2 scene])
+    C --> D([Build water mask])
+    D --> E([Compute six indices])
+    E --> F([Deterministic risk score])
+    F --> G([Add field evidence])
+    G --> H([Rescore session])
+    F --> I([Explain with agents])
+    H --> J([PDF monitoring brief])
+    I --> J
+
+    classDef input fill:#0b2a3d,stroke:#38bdf8,color:#e0f2fe,stroke-width:2px;
+    classDef compute fill:#123b36,stroke:#2dd4bf,color:#ccfbf1,stroke-width:2px;
+    classDef output fill:#30214d,stroke:#a78bfa,color:#ede9fe,stroke-width:2px;
+    class A,B,C input;
+    class D,E,F,G,H compute;
+    class I,J output;

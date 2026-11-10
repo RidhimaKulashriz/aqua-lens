@@ -19,6 +19,15 @@
 
 > **Important:** AquaLens provides environmental guidance for prioritising follow-up investigation. It is not a water-safety certification, toxin detector, laboratory test, or replacement for professional judgment.
 
+<table>
+  <tr>
+    <td><strong>6</strong><br />spectral indices</td>
+    <td><strong>3</strong><br />risk bands</td>
+    <td><strong>5</strong><br />agent stages</td>
+    <td><strong>1</strong><br />traceable report</td>
+  </tr>
+</table>
+
 ## What is AquaLens?
 
 AquaLens helps a monitoring team understand what may be happening in a lake, river, reservoir, or other freshwater area.
@@ -53,18 +62,9 @@ Every session can show the selected scene, index values, risk contributors, fiel
 
 ## How a session works
 
-```mermaid
-flowchart LR
-    A[Choose a water body] --> B[Select a date range]
-    B --> C[Find a Sentinel-2 scene]
-    C --> D[Calculate six indices]
-    D --> E[Compute deterministic risk]
-    E --> F[Add field observations]
-    F --> G[Rescore the session]
-    E --> H[Generate explanation]
-    G --> I[Shareable PDF brief]
-    H --> I
-```
+<p align="center">
+  <img src="assets/readme-workflow.png" alt="AquaLens monitoring workflow" width="100%" />
+</p>
 
 ### Step 1 — Choose an area
 
@@ -125,15 +125,9 @@ Full details: [`docs/spectral_indices.md`](docs/spectral_indices.md)
 
 The risk model is deliberately separate from the AI narrative.
 
-```mermaid
-flowchart LR
-    A[Satellite indices] --> C[Normalise signals]
-    B[Field observations] --> D[Bounded evidence bonus]
-    C --> E[Weighted score]
-    D --> E
-    E --> F[Low / medium / high]
-    F --> G[Routine / elevated / immediate]
-```
+<p align="center">
+  <img src="assets/readme-risk-model.png" alt="AquaLens deterministic risk model" width="100%" />
+</p>
 
 The model combines satellite signals with bounded field-evidence contributions. The final score is clamped to a fixed range and converted into a risk level and urgency.
 
@@ -168,21 +162,6 @@ Full details: [`docs/risk_model.md`](docs/risk_model.md)
 
 When agentic mode is enabled, AquaLens uses specialised stages rather than one opaque generation step:
 
-```mermaid
-flowchart LR
-    C[Coordinator] --> S[Scout]
-    C --> H[Historian]
-    S --> A[Analyst]
-    H --> A
-    A --> R[Reporter]
-    H <--> M[(Water-body memory)]
-    C -.-> T[(Session trace)]
-    S -.-> T
-    H -.-> T
-    A -.-> T
-    R -.-> T
-```
-
 - **Coordinator** plans the work.
 - **Scout** gathers scene and visual context.
 - **Historian** recalls relevant observations from earlier sessions.
@@ -192,6 +171,12 @@ flowchart LR
 The agent layer is optional. Local and test runs can use deterministic fallbacks with no Gemini calls.
 
 Read more in [`docs/agent_layer.md`](docs/agent_layer.md).
+
+## System architecture
+
+<p align="center">
+  <img src="assets/readme-architecture.png" alt="AquaLens system architecture" width="78%" />
+</p>
 
 ## Project structure
 
