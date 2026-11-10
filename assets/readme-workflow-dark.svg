@@ -1,27 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="440" viewBox="0 0 1400 440" role="img" aria-labelledby="title desc">
   <title id="title">AquaLens monitoring workflow</title>
-  <desc id="desc">AquaLens takes a water body through satellite analysis, deterministic scoring, field evidence, agent explanation, and a PDF report.</desc>
+  <desc id="desc">A linear workflow from area definition through satellite scene selection, spectral calculations, deterministic risk scoring, optional interpretation, and report generation. Field evidence can trigger a rescore.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#0d1d2e"/></linearGradient>
-    <linearGradient id="blue" x1="0" x2="1"><stop stop-color="#123b5a"/><stop offset="1" stop-color="#0d2a42"/></linearGradient>
-    <linearGradient id="teal" x1="0" x2="1"><stop stop-color="#123f41"/><stop offset="1" stop-color="#0e3035"/></linearGradient>
-    <linearGradient id="violet" x1="0" x2="1"><stop stop-color="#302650"/><stop offset="1" stop-color="#241d3c"/></linearGradient>
-    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000" flood-opacity=".35"/></filter>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#67e8f9"/></marker>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6" fill="none" stroke="#7d969e" stroke-width="1"/>
+    </marker>
   </defs>
-  <rect width="1600" height="360" rx="28" fill="url(#bg)"/>
-  <text x="60" y="58" fill="#e6f1ff" font-family="Inter,Arial,sans-serif" font-size="25" font-weight="700">AquaLens / monitoring loop</text>
-  <text x="60" y="88" fill="#8ca5b9" font-family="Inter,Arial,sans-serif" font-size="16">From a location on the map to an evidence-backed monitoring brief.</text>
-  <g font-family="Inter,Arial,sans-serif" font-size="16" text-anchor="middle" filter="url(#shadow)">
-    <g><rect x="60" y="145" width="180" height="72" rx="16" fill="url(#blue)" stroke="#38bdf8" stroke-width="2"/><text x="150" y="176" fill="#e6f1ff" font-weight="700">Choose area</text><text x="150" y="199" fill="#9cc7e6" font-size="13">map / point / polygon</text></g>
-    <g><rect x="280" y="145" width="180" height="72" rx="16" fill="url(#blue)" stroke="#38bdf8" stroke-width="2"/><text x="370" y="176" fill="#e6f1ff" font-weight="700">Select window</text><text x="370" y="199" fill="#9cc7e6" font-size="13">dates + cloud cover</text></g>
-    <g><rect x="500" y="145" width="180" height="72" rx="16" fill="url(#violet)" stroke="#a78bfa" stroke-width="2"/><text x="590" y="176" fill="#f5f3ff" font-weight="700">Find scene</text><text x="590" y="199" fill="#c7bff0" font-size="13">Sentinel-2 L2A / STAC</text></g>
-    <g><rect x="720" y="145" width="180" height="72" rx="16" fill="url(#teal)" stroke="#2dd4bf" stroke-width="2"/><text x="810" y="176" fill="#e6fffb" font-weight="700">Analyse signal</text><text x="810" y="199" fill="#9ce5d8" font-size="13">water mask + 6 indices</text></g>
-    <g><rect x="940" y="145" width="180" height="72" rx="16" fill="url(#teal)" stroke="#2dd4bf" stroke-width="2"/><text x="1030" y="176" fill="#e6fffb" font-weight="700">Score risk</text><text x="1030" y="199" fill="#9ce5d8" font-size="13">deterministic + bounded</text></g>
-    <g><rect x="1160" y="145" width="180" height="72" rx="16" fill="url(#violet)" stroke="#a78bfa" stroke-width="2"/><text x="1250" y="176" fill="#f5f3ff" font-weight="700">Explain</text><text x="1250" y="199" fill="#c7bff0" font-size="13">agents + field context</text></g>
-    <g><rect x="1380" y="145" width="160" height="72" rx="16" fill="#183b36" stroke="#34d399" stroke-width="2"/><text x="1460" y="176" fill="#d1fae5" font-weight="700">Report</text><text x="1460" y="199" fill="#a7f3d0" font-size="13">traceable PDF</text></g>
+  <rect width="1400" height="440" fill="#10171d"/>
+  <text x="42" y="48" fill="#dfe8eb" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="600" letter-spacing="1.8">MONITORING WORKFLOW</text>
+  <text x="1358" y="48" fill="#84969d" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" letter-spacing="1.4">ONE SESSION · TRACEABLE OUTPUT</text>
+  <line x1="42" y1="72" x2="1358" y2="72" stroke="#34434b" stroke-width="1"/>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <line x1="105" y1="176" x2="1295" y2="176" stroke="#657b83" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+    <g fill="#83b8bd" font-size="12" font-weight="700" letter-spacing="1.4">
+      <text x="105" y="125" text-anchor="middle">01</text>
+      <text x="343" y="125" text-anchor="middle">02</text>
+      <text x="581" y="125" text-anchor="middle">03</text>
+      <text x="819" y="125" text-anchor="middle">04</text>
+      <text x="1057" y="125" text-anchor="middle">05</text>
+      <text x="1295" y="125" text-anchor="middle">06</text>
+    </g>
+
+    <g stroke="#83b8bd" stroke-width="1.5" fill="#10171d">
+      <circle cx="105" cy="176" r="5"/>
+      <circle cx="343" cy="176" r="5"/>
+      <circle cx="581" cy="176" r="5"/>
+      <circle cx="819" cy="176" r="5"/>
+      <circle cx="1057" cy="176" r="5"/>
+      <circle cx="1295" cy="176" r="5"/>
+    </g>
+
+    <g fill="#e0e8eb" font-size="16" font-weight="600">
+      <text x="105" y="218" text-anchor="middle">Define area</text>
+      <text x="343" y="218" text-anchor="middle">Select scene</text>
+      <text x="581" y="218" text-anchor="middle">Calculate indices</text>
+      <text x="819" y="218" text-anchor="middle">Score risk</text>
+      <text x="1057" y="218" text-anchor="middle">Interpret</text>
+      <text x="1295" y="218" text-anchor="middle">Report</text>
+    </g>
+
+    <g fill="#95a5ab" font-size="12">
+      <text x="105" y="244" text-anchor="middle">Polygon / point</text>
+      <text x="105" y="262" text-anchor="middle">Date window</text>
+
+      <text x="343" y="244" text-anchor="middle">STAC search</text>
+      <text x="343" y="262" text-anchor="middle">Cloud constraint</text>
+
+      <text x="581" y="244" text-anchor="middle">Water mask</text>
+      <text x="581" y="262" text-anchor="middle">Six measurements</text>
+
+      <text x="819" y="244" text-anchor="middle">Weighted model</text>
+      <text x="819" y="262" text-anchor="middle">Evidence adjustment</text>
+
+      <text x="1057" y="244" text-anchor="middle">Optional Gemini</text>
+      <text x="1057" y="262" text-anchor="middle">Context and summary</text>
+
+      <text x="1295" y="244" text-anchor="middle">Persisted session</text>
+      <text x="1295" y="262" text-anchor="middle">PDF and trace</text>
+    </g>
+
+    <line x1="42" y1="305" x2="1358" y2="305" stroke="#34434b" stroke-width="1"/>
+    <text x="42" y="338" fill="#83b8bd" font-size="12" font-weight="700" letter-spacing="1.4">FIELD EVIDENCE FEEDBACK</text>
+    <text x="42" y="375" fill="#e0e8eb" font-size="14" font-weight="600">Observation submitted</text>
+    <text x="255" y="375" fill="#95a5ab" font-size="13">→</text>
+    <text x="292" y="375" fill="#e0e8eb" font-size="14" font-weight="600">Evidence persisted</text>
+    <text x="490" y="375" fill="#95a5ab" font-size="13">→</text>
+    <text x="527" y="375" fill="#e0e8eb" font-size="14" font-weight="600">Risk recalculated</text>
+    <text x="707" y="375" fill="#95a5ab" font-size="13">→</text>
+    <text x="744" y="375" fill="#e0e8eb" font-size="14" font-weight="600">Narrative and report refreshed</text>
+    <text x="1358" y="414" fill="#65777f" font-size="10" text-anchor="end" letter-spacing="1">AQUALENS / SESSION LIFECYCLE</text>
   </g>
-  <g stroke="#67e8f9" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M240 181H275"/><path d="M460 181H495"/><path d="M680 181H715"/><path d="M900 181H935"/><path d="M1120 181H1155"/><path d="M1340 181H1375"/></g>
-  <path d="M1030 235 C1030 300, 820 310, 680 235" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8 8" fill="none" marker-end="url(#arrow)"/>
-  <text x="830" y="330" fill="#fcd34d" font-family="Inter,Arial,sans-serif" font-size="14" text-anchor="middle">field evidence → background rescore</text>
 </svg>
