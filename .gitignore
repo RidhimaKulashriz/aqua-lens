@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local application data
+backend/data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+frontend/.env*.local
+
+# Test output
+playwright-report/
+test-results/
+frontend/playwright/.cache/
+frontend/blob-report/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
