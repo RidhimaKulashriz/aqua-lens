@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="950" viewBox="0 0 1600 950" role="img" aria-labelledby="t d">
+<title id="t">AquaLens runtime architecture</title>
+<desc id="d">Container diagram of the browser, FastAPI process, in-process task runner, satellite processing pipeline, optional Gemini layer, external STAC and map services, database and file storage.</desc>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8" fill="none" stroke="#294b5d" stroke-width="1.1"/></marker><marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8" fill="none" stroke="#64767e" stroke-width="1.1"/></marker></defs>
+<rect width="1600" height="950" fill="#fff"/>
+<text x="48" y="52" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#192a32" letter-spacing="1">SYSTEM ARCHITECTURE</text>
+<text x="48" y="78" font-family="Arial,sans-serif" font-size="13" fill="#586971">Container boundaries · processing components · data stores</text>
+<line x1="48" y1="99" x2="1552" y2="99" stroke="#bdc8cc"/>
+
+<!-- Trust / runtime boundaries -->
+<rect x="48" y="130" width="270" height="620" fill="#fbfcfc" stroke="#82939a" stroke-dasharray="6 5"/>
+<rect x="360" y="130" width="300" height="620" fill="#fbfcfc" stroke="#82939a" stroke-dasharray="6 5"/>
+<rect x="700" y="130" width="540" height="620" fill="#fbfcfc" stroke="#82939a" stroke-dasharray="6 5"/>
+<rect x="1280" y="130" width="272" height="620" fill="#fbfcfc" stroke="#82939a" stroke-dasharray="6 5"/>
+<g font-family="Arial,sans-serif" font-size="12.5" font-weight="700" fill="#344b56" letter-spacing="1.3">
+<text x="68" y="162">BROWSER</text><text x="380" y="162">FASTAPI PROCESS</text><text x="720" y="162">BACKGROUND ANALYSIS</text><text x="1300" y="162">EXTERNAL SERVICES</text></g>
+
+<!-- browser -->
+<rect x="75" y="235" width="216" height="180" fill="#f2f6f7" stroke="#35596a" stroke-width="1.4"/>
+<rect x="75" y="235" width="216" height="32" fill="#e5edef" stroke="#35596a"/>
+<g font-family="Arial,sans-serif" fill="#1e3038"><text x="90" y="256" font-size="13" font-weight="700">Web application</text><text x="90" y="296" font-size="15" font-weight="700">Next.js 15 / React 19</text><text x="90" y="322" font-size="12">App Router · typed REST client</text><text x="90" y="346" font-size="12">MapLibre · OpenFreeMap</text><text x="90" y="370" font-size="12">TanStack Query</text><text x="90" y="394" font-size="12">AOIs · sessions · evidence · PDF</text></g>
+
+<!-- API -->
+<rect x="387" y="225" width="246" height="112" fill="#f2f6f7" stroke="#35596a" stroke-width="1.4"/>
+<rect x="387" y="225" width="246" height="30" fill="#e5edef" stroke="#35596a"/>
+<g font-family="Arial,sans-serif" fill="#1e3038"><text x="402" y="245" font-size="12.5" font-weight="700">HTTP interface</text><text x="402" y="283" font-size="16" font-weight="700">FastAPI · /api/v1</text><text x="402" y="307" font-size="12">Routes and Pydantic schemas</text><text x="402" y="326" font-size="12">AOIs · sessions · evidence · reports</text></g>
+<rect x="387" y="385" width="246" height="92" fill="#fff" stroke="#667a83" stroke-width="1.2"/>
+<g font-family="Arial,sans-serif" fill="#263840"><text x="402" y="413" font-size="14" font-weight="700">SQLModel / SQLAlchemy</text><text x="402" y="438" font-size="12">ORM models and DB sessions</text><text x="402" y="459" font-size="12">CRUD operations</text></g>
+<rect x="387" y="530" width="246" height="112" fill="#fff" stroke="#667a83" stroke-width="1.2"/>
+<g font-family="Arial,sans-serif" fill="#263840"><text x="402" y="558" font-size="14" font-weight="700">InProcessJobRunner</text><text x="402" y="583" font-size="12">FastAPI BackgroundTasks</text><text x="402" y="606" font-size="12">Schedules run_full(session_id)</text><text x="402" y="627" font-size="12">No external queue or worker</text></g>
+<rect x="387" y="676" width="246" height="48" fill="#fff" stroke="#667a83" stroke-width="1.2"/>
+<text x="402" y="706" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#263840">Jinja2 + WeasyPrint renderer</text>
+
+<!-- pipeline -->
+<rect x="728" y="220" width="484" height="70" fill="#f2f6f7" stroke="#35596a" stroke-width="1.4"/>
+<text x="746" y="247" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#1e3038">PIPELINE ENTRY</text><text x="746" y="272" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#1e3038">run_full(session_id)</text>
+
+<rect x="728" y="345" width="140" height="112" fill="#fff" stroke="#667a83" stroke-width="1.2"/><rect x="728" y="345" width="140" height="28" fill="#edf1f2" stroke="#667a83"/><g font-family="Arial,sans-serif" fill="#263840"><text x="740" y="364" font-size="12" font-weight="700">Provider</text><text x="740" y="400" font-size="14" font-weight="700">STAC search</text><text x="740" y="423" font-size="11.5">Sentinel-2 L2A</text><text x="740" y="442" font-size="11.5">scene assets</text></g>
+<rect x="900" y="345" width="140" height="112" fill="#fff" stroke="#667a83" stroke-width="1.2"/><rect x="900" y="345" width="140" height="28" fill="#edf1f2" stroke="#667a83"/><g font-family="Arial,sans-serif" fill="#263840"><text x="912" y="364" font-size="12" font-weight="700">Raster processing</text><text x="912" y="400" font-size="14" font-weight="700">Rasterio</text><text x="912" y="423" font-size="11.5">clip AOI</text><text x="912" y="442" font-size="11.5">align bands</text></g>
+<rect x="1072" y="345" width="140" height="112" fill="#fff" stroke="#667a83" stroke-width="1.2"/><rect x="1072" y="345" width="140" height="28" fill="#edf1f2" stroke="#667a83"/><g font-family="Arial,sans-serif" fill="#263840"><text x="1084" y="364" font-size="12" font-weight="700">Index engine</text><text x="1084" y="400" font-size="14" font-weight="700">NumPy</text><text x="1084" y="423" font-size="11.5">water mask</text><text x="1084" y="442" font-size="11.5">six aggregates</text></g>
+
+<rect x="728" y="525" width="210" height="108" fill="#f2f6f7" stroke="#35596a" stroke-width="1.4"/><rect x="728" y="525" width="210" height="29" fill="#e5edef" stroke="#35596a"/><g font-family="Arial,sans-serif" fill="#1e3038"><text x="743" y="544" font-size="12.5" font-weight="700">Deterministic scoring</text><text x="743" y="582" font-size="16" font-weight="700">score_risk()</text><text x="743" y="606" font-size="12">score · level · urgency</text></g>
+<rect x="968" y="525" width="244" height="108" fill="#fff" stroke="#667a83" stroke-width="1.2" stroke-dasharray="5 3"/><rect x="968" y="525" width="244" height="29" fill="#edf1f2" stroke="#667a83"/><g font-family="Arial,sans-serif" fill="#263840"><text x="983" y="544" font-size="12.5" font-weight="700">Optional narrative layer</text><text x="983" y="582" font-size="15" font-weight="700">Agent orchestrator</text><text x="983" y="605" font-size="11.5">Coordinator · Scout · Historian*</text><text x="983" y="622" font-size="11.5">Analyst · Reporter</text></g>
+<rect x="728" y="678" width="484" height="46" fill="#f2f6f7" stroke="#35596a" stroke-width="1.4"/><text x="744" y="706" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#1e3038">Persist indices · risk · evidence · optional trace and memory</text>
+
+<!-- external service nodes -->
+<rect x="1305" y="225" width="222" height="100" fill="#fff" stroke="#667a83" stroke-width="1.2"/><g font-family="Arial,sans-serif" fill="#263840"><text x="1320" y="252" font-size="14" font-weight="700">STAC catalogue</text><text x="1320" y="276" font-size="11.8">AWS Earth Search (default)</text><text x="1320" y="298" font-size="11.8">Planetary Computer configurable</text></g>
+<rect x="1305" y="410" width="222" height="100" fill="#fff" stroke="#667a83" stroke-width="1.2" stroke-dasharray="5 3"/><g font-family="Arial,sans-serif" fill="#263840"><text x="1320" y="437" font-size="14" font-weight="700">Google Gemini</text><text x="1320" y="461" font-size="11.8">Optional reasoning and tools</text><text x="1320" y="483" font-size="11.8">Historian embeddings</text></g>
+<rect x="1305" y="595" width="222" height="100" fill="#fff" stroke="#667a83" stroke-width="1.2"/><g font-family="Arial,sans-serif" fill="#263840"><text x="1320" y="622" font-size="14" font-weight="700">OpenFreeMap</text><text x="1320" y="646" font-size="11.8">Styles and vector tiles</text><text x="1320" y="668" font-size="11.8">Requested by MapLibre</text></g>
+
+<!-- Persistence -->
+<rect x="360" y="805" width="1192" height="110" fill="#fbfcfc" stroke="#82939a" stroke-dasharray="6 5"/>
+<text x="380" y="831" font-family="Arial,sans-serif" font-size="12.5" font-weight="700" fill="#344b56" letter-spacing="1.2">PERSISTENCE</text>
+<rect x="395" y="846" width="510" height="52" fill="#f2f6f7" stroke="#35596a" stroke-width="1.2"/><g font-family="Arial,sans-serif" fill="#1e3038"><text x="410" y="868" font-size="13.5" font-weight="700">PostgreSQL · PostGIS · pgvector</text><text x="410" y="887" font-size="11.5">SQLite for local and test configurations</text></g>
+<rect x="1005" y="846" width="510" height="52" fill="#fff" stroke="#667a83" stroke-width="1.2"/><g font-family="Arial,sans-serif" fill="#263840"><text x="1020" y="868" font-size="13.5" font-weight="700">File storage</text><text x="1020" y="887" font-size="11.5">Evidence photos and generated PDFs · raw scenes not archived</text></g>
+
+<!-- connectors -->
+<g fill="none" stroke="#294b5d" stroke-width="1.6" marker-end="url(#a)">
+<path d="M291 325H387"/>
+<path d="M510 337V385"/>
+<path d="M510 477V530"/>
+<path d="M633 585H680V255H728"/>
+<path d="M970 290V345"/>
+<path d="M868 401H900"/>
+<path d="M1040 401H1072"/>
+<path d="M1142 457V493H833V525"/>
+<path d="M833 633V678"/>
+<path d="M1090 633V678"/>
+<path d="M868 401H1260V275H1305"/>
+<path d="M1212 579H1260V460H1305"/>
+<path d="M291 390H335V775H1416V595"/>
+<path d="M510 477V785H650V846"/>
+<path d="M970 724V785H650V846"/>
+<path d="M1120 724V785H1260V846"/>
+</g>
+<g fill="none" stroke="#64767e" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#b)"><path d="M938 579H968"/></g>
+<g font-family="Arial,sans-serif" font-size="11" fill="#586971"><text x="336" y="311">HTTPS / JSON</text><text x="522" y="514">enqueue</text><text x="685" y="445">run_full()</text><text x="1170" y="390">scene assets</text><text x="1268" y="447" text-anchor="end">optional calls</text><text x="946" y="567" text-anchor="middle">narrative only</text><text x="1370" y="577" text-anchor="middle">map tiles</text></g>
+
+<line x1="48" y1="928" x2="1552" y2="928" stroke="#bdc8cc"/>
+<g font-family="Arial,sans-serif" font-size="11.5" fill="#586971"><line x1="70" y1="940" x2="115" y2="940" stroke="#294b5d" stroke-width="1.6" marker-end="url(#a)"/><text x="126" y="944">request / data path</text><line x1="300" y1="940" x2="345" y2="940" stroke="#64767e" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#b)"/><text x="356" y="944">optional path</text><text x="570" y="944">* Historian runs when prior in-product history exists for the water body.</text></g>
+</svg>
