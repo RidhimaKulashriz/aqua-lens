@@ -64,7 +64,7 @@ A monitoring team can:
 | Explain the result | Generate a field brief and citizen summary with the optional agent layer |
 | Share the work | Inspect traces and download a regenerated PDF report |
 
-## Interactive architecture
+## System architecture
 
 The visuals below are stored in the repository as dark SVGs so they remain readable on GitHub dark mode and do not depend on a white canvas.
 
