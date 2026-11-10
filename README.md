@@ -1,110 +1,162 @@
 <div align="center">
   <img src="assets/logo-animated.svg" alt="AquaLens" width="560" />
 
-  <h2>See water differently.</h2>
+  <h1>AquaLens</h1>
+  <p><strong>Autonomous freshwater monitoring with a deterministic core and a traceable agent layer.</strong></p>
 
   <p>
-    AquaLens is a freshwater monitoring platform that combines satellite imagery,
-    field observations, transparent risk scoring, and explainable AI.
+    <a href="https://frontend-eight-gamma-82.vercel.app">Live app</a> ·
+    <a href="https://aqua-lens-backend.onrender.com/docs">API explorer</a> ·
+    <a href="docs/user_manual.md">User manual</a> ·
+    <a href="docs/architecture.md">Deep architecture</a>
   </p>
 
   <p>
-    <a href="https://frontend-eight-gamma-82.vercel.app">Open the live app</a> ·
-    <a href="https://aqua-lens-backend.onrender.com/docs">Explore the API</a> ·
-    <a href="docs/user_manual.md">Read the user guide</a>
+    <img src="https://img.shields.io/badge/frontend-Next.js%2015-111827?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js 15" />
+    <img src="https://img.shields.io/badge/backend-FastAPI-0f766e?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/data-Sentinel--2%20%2B%20PostGIS-4c1d95?style=for-the-badge" alt="Sentinel-2 and PostGIS" />
+    <img src="https://img.shields.io/badge/AI-Gemini%20agents-92400e?style=for-the-badge" alt="Gemini agents" />
   </p>
 </div>
 
-<br />
+> **Advisory only.** AquaLens helps teams prioritise sampling locations and interpret environmental signals. It does not certify water safety, detect toxins, or replace laboratory testing and professional judgment.
 
-> **Important:** AquaLens provides environmental guidance for prioritising follow-up investigation. It is not a water-safety certification, toxin detector, laboratory test, or replacement for professional judgment.
+## Navigate this README
 
-<table>
-  <tr>
-    <td><strong>6</strong><br />spectral indices</td>
-    <td><strong>3</strong><br />risk bands</td>
-    <td><strong>5</strong><br />agent stages</td>
-    <td><strong>1</strong><br />traceable report</td>
-  </tr>
-</table>
+<details open>
+<summary><strong>Open the project map</strong></summary>
 
-## What is AquaLens?
+- [What AquaLens is](#what-aqualens-is)
+- [Interactive architecture](#interactive-architecture)
+- [Product workflow](#product-workflow)
+- [Science and risk model](#science-and-risk-model)
+- [Agent layer](#agent-layer)
+- [Complete repository inventory](#complete-repository-inventory)
+- [Frontend map](#frontend-map)
+- [Backend map](#backend-map)
+- [API surface](#api-surface)
+- [Run locally](#run-locally)
+- [Configuration](#configuration)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Limitations](#limitations)
+- [Documentation](#documentation)
 
-AquaLens helps a monitoring team understand what may be happening in a lake, river, reservoir, or other freshwater area.
+</details>
 
-Instead of keeping satellite data, field notes, calculations, and reports in separate places, AquaLens brings them into one workflow:
+## What AquaLens is
 
-1. Select a water body.
-2. Analyse recent satellite imagery.
-3. Review the water-quality signals.
-4. Add observations from the field.
-5. Generate a clear, traceable monitoring brief.
+AquaLens is a full-stack freshwater monitoring system. It connects a water-body map, satellite imagery, spectral analysis, field evidence, deterministic risk scoring, agent-assisted explanation, and PDF reporting into one traceable session.
 
-The goal is simple: **make it easier to notice changes, decide what needs attention, and explain why.**
+The core product idea is intentionally simple:
 
-## Why it is useful
+> **The deterministic pipeline decides what the numbers say. The agent layer explains what they mean.**
 
-### One place for the whole monitoring story
+A monitoring team can:
 
-AquaLens keeps the location, satellite scene, spectral measurements, field evidence, risk assessment, reasoning, and report connected to the same monitoring session.
+| Need | AquaLens surface |
+| --- | --- |
+| Define an area | Search a place, paste coordinates, draw a polygon, or create a buffered point |
+| Find imagery | Search Sentinel-2 L2A scenes through STAC with a date and cloud-cover window |
+| Measure change | Compute six spectral indices over a water mask |
+| Prioritise action | Combine satellite signals and field evidence into a bounded risk score |
+| Add local context | Record colour, odour, algae, dead fish, rain, complaints, notes, and photos |
+| Explain the result | Generate a field brief and citizen summary with the optional agent layer |
+| Share the work | Inspect traces and download a regenerated PDF report |
 
-### Numbers first. Explanation second.
+## Interactive architecture
 
-The risk score is calculated by a deterministic, testable model. The AI layer explains the result in plain language, but it cannot change the score or invent measurements.
+The visuals below are stored in the repository as dark SVGs so they remain readable on GitHub dark mode and do not depend on a white canvas.
 
-### Remote sensing plus real-world evidence
-
-Satellite data gives broad coverage. Field evidence adds what people can actually see and smell. AquaLens lets both types of information contribute to the same assessment.
-
-### Clear enough to inspect
-
-Every session can show the selected scene, index values, risk contributors, field evidence, agent trace, limitations, and downloadable PDF report.
-
-## How a session works
+### System architecture
 
 <p align="center">
-  <img src="assets/readme-workflow.png" alt="AquaLens monitoring workflow" width="100%" />
+  <img src="assets/readme-architecture-dark.svg" alt="AquaLens full system architecture" width="100%" />
 </p>
 
-### Step 1 — Choose an area
+<details>
+<summary><strong>Expand the architecture by layer</strong></summary>
 
-Search for a place, enter coordinates, draw a polygon, or create a buffered monitoring area. AquaLens stores the geometry, centroid, area, and source.
+| Layer | What is inside | Repository location |
+| --- | --- | --- |
+| Presentation | Marketing pages, dashboard, monitor, sessions, water bodies, settings, reports | `frontend/app/` |
+| UI system | Navigation, map, session cards, evidence forms, report controls, shadcn-style primitives | `frontend/components/` |
+| API | FastAPI application, versioned routes, request validation, OpenAPI | `backend/app/api/`, `backend/app/schemas/` |
+| Runtime | Settings, database, logging, background jobs, startup maintenance | `backend/app/core/`, `backend/app/main.py` |
+| Science | STAC providers, raster reads, water masks, six indices, risk model | `backend/app/services/satellite/`, `indices.py`, `risk_model.py` |
+| Reasoning | Coordinator, Scout, Historian, Analyst, Reporter, trace recorder, fallbacks | `backend/app/services/agent/` |
+| Persistence | Water bodies, sessions, indices, risk, evidence, reports, traces, memory | `backend/app/models/`, `backend/alembic/` |
+| Delivery | PDF templates, uploads, generated reports, Vercel, Render, Supabase | `backend/app/services/templates/`, `infrastructure/` |
 
-### Step 2 — Run a monitoring session
+</details>
 
-Choose a date window and cloud-cover limit. The backend searches for a suitable Sentinel-2 L2A scene through a STAC provider.
+### Data flow
 
-### Step 3 — Read the satellite signal
+<p align="center">
+  <img src="assets/readme-workflow-dark.svg" alt="AquaLens monitoring data flow" width="100%" />
+</p>
 
-The pipeline builds a water mask and calculates six spectral indices over the selected area. Each result includes statistics, provenance, and an interpretation.
+### Deterministic risk path
 
-### Step 4 — Add field evidence
+<p align="center">
+  <img src="assets/readme-risk-dark.svg" alt="AquaLens deterministic risk model" width="100%" />
+</p>
 
-Record visible water colour, odour, algae, dead fish, rainfall, public complaints, notes, and optional photos. New evidence triggers a background rescore.
+## Product workflow
 
-### Step 5 — Understand and share the result
+### 1. Define a water body
 
-Review the risk level, urgency, contributors, recommendation, limitations, and human-readable explanation. Download a PDF report whenever needed.
+The frontend supports place search, coordinate entry, map selection, polygon drawing, and buffered points. The backend stores the geometry, centroid, calculated area, and source.
 
-## What AquaLens measures
+### 2. Start a monitoring session
 
-AquaLens uses Sentinel-2 surface-reflectance bands to calculate six normalised indices:
+A session accepts a water body, date range, and maximum cloud-cover threshold. It is created immediately and processed in the background:
 
-| Index | What it helps indicate |
+```text
+pending  →  processing  →  complete
+                         ↘  failed
+```
+
+### 3. Analyse the satellite scene
+
+The pipeline searches the configured STAC provider, reads the required Sentinel-2 bands, builds a water mask, and aggregates the six indices over the selected area.
+
+### 4. Calculate risk
+
+A deterministic weighted model combines satellite signals. Field evidence can add a bounded bonus. The resulting score is clamped to `[0, 1]` and converted to a risk level and urgency.
+
+### 5. Add field evidence
+
+The evidence form supports:
+
+| Evidence | Stored by AquaLens |
 | --- | --- |
-| **NDWI** | Open-water signal and water-mask support |
-| **MNDWI** | Water signal with less confusion from built-up surfaces |
-| **NDTI** | Turbidity and suspended-sediment signal |
-| **NDCI** | Chlorophyll-a proxy and possible bloom-related change |
-| **NDVI** | Floating vegetation and shoreline stress |
-| **WRI** | Moisture and open-water signal |
+| Visual observations | Water colour, odour, algae presence |
+| Incident signals | Dead fish, public complaints, recent rainfall |
+| Human context | Notes, reporter name, latitude, longitude |
+| Media | Optional photo upload with EXIF metadata stripped before storage |
 
-These are environmental proxies. They are useful for prioritising investigation, but they are not direct measurements of toxins or public-health safety.
+Submitting evidence schedules a background rescore of the session.
+
+### 6. Explain and report
+
+When enabled, the agent layer writes the narrative, citizen summary, citations, and execution trace. The report generator turns the persisted session into a PDF and includes the advisory disclaimer.
+
+## Science and risk model
+
+### Spectral indices
+
+| Index | Primary signal | Sentinel-2 bands |
+| --- | --- | --- |
+| **NDWI** | Open-water signal and water mask | NIR, SWIR |
+| **MNDWI** | Water signal with reduced built-up confusion | Green, SWIR |
+| **NDTI** | Turbidity / suspended sediment proxy | Red, Green |
+| **NDCI** | Chlorophyll-a proxy | Red Edge, Red |
+| **NDVI** | Floating biomass and shoreline stress | NIR, Red |
+| **WRI** | Moisture and open-water ratio | Green, Red, NIR, SWIR |
 
 <details>
-<summary><strong>View the formulas and technical methodology</strong></summary>
-
-The implementation uses the following band math:
+<summary><strong>Expand the formulas</strong></summary>
 
 ```text
 NDWI  = (NIR - SWIR) / (NIR + SWIR)
@@ -115,138 +167,275 @@ NDVI  = (NIR - Red) / (NIR + Red)
 WRI   = (Green + Red) / (NIR + SWIR)
 ```
 
-Bands are resampled to a common grid, masked to the selected area, filtered to water pixels, and aggregated into mean, minimum, maximum, standard deviation, and sample count.
+Bands are resampled to a common grid. The pipeline masks the selected polygon, drops invalid and non-water pixels, and stores mean, minimum, maximum, standard deviation, sample count, band provenance, and interpretation.
 
-Full details: [`docs/spectral_indices.md`](docs/spectral_indices.md)
+See [`docs/spectral_indices.md`](docs/spectral_indices.md).
 
 </details>
 
-## How risk is calculated
+### Risk weights
 
-The risk model is deliberately separate from the AI narrative.
+| Contributor | Weight | Interpretation |
+| --- | ---: | --- |
+| NDCI chlorophyll proxy | `0.40` | Primary biological-signal contributor |
+| NDTI turbidity proxy | `0.25` | Suspended-sediment / turbidity contribution |
+| Shoreline NDVI | `0.10` | Vegetation and shoreline-stress contribution |
+| MNDWI water-signal floor | `0.10` | Confidence penalty when water signal is weak |
+| NDWI water-signal floor | `0.15` | Confidence penalty when water mask signal is weak |
 
-<p align="center">
-  <img src="assets/readme-risk-model.png" alt="AquaLens deterministic risk model" width="100%" />
-</p>
+Field evidence adds a bounded bonus for algae, suspicious colour or odour, dead fish, complaints, and rainfall. The score is bucketed as:
 
-The model combines satellite signals with bounded field-evidence contributions. The final score is clamped to a fixed range and converted into a risk level and urgency.
+| Final score | Level | Typical urgency |
+| ---: | --- | --- |
+| `< 0.33` | Low | Routine |
+| `0.33 – 0.65` | Medium | Routine or elevated |
+| `≥ 0.66` | High | Elevated or immediate |
 
-The AI layer receives the structured result and writes the explanation. It is not allowed to:
+See [`docs/risk_model.md`](docs/risk_model.md).
 
-- change the numeric risk score;
-- change the risk level or urgency;
-- invent measurements;
-- claim toxin detection;
-- provide water-safety certification.
+## Agent layer
+
+The agent layer is optional and feature-flagged. It sits above the deterministic pipeline; it does not replace it.
+
+| Stage | Responsibility | Implementation |
+| --- | --- | --- |
+| **Coordinator** | Plans which stages run and sets budgets | `backend/app/services/agent/orchestrator.py` |
+| **Scout** | Searches scenes, inspects metadata, uses vision on thumbnails | `backend/app/services/agent/scout.py` |
+| **Historian** | Reads session history, trends, citations, and persistent memory | `backend/app/services/agent/historian.py` |
+| **Analyst** | Drafts, critiques, and optionally rewrites the reasoning bundle | `backend/app/services/agent/analyst.py` |
+| **Reporter** | Produces the structured citizen-facing summary | `backend/app/services/agent/reporter.py` |
+
+### Trace and memory
+
+| Store | Purpose |
+| --- | --- |
+| `agent_traces` | Coordinator plan, agent runs, tool calls, token counts, latency, errors |
+| `agent_memory` | Water-body-specific historian notes with semantic embeddings |
+
+If an agent fails, AquaLens falls back instead of silently losing the session:
+
+| Failure | Fallback |
+| --- | --- |
+| Coordinator error | Default Scout → Analyst → Reporter plan |
+| Historian error | Analyst continues without historical context |
+| Analyst error | Deterministic reasoning bundle |
+| Reporter error | Deterministic citizen summary |
+| Whole agent-layer error | Single-call deterministic-safe reasoning path |
+
+Full details: [`docs/agent_layer.md`](docs/agent_layer.md).
+
+## Complete repository inventory
+
+This is the project map for the actual repository—not a generic stack diagram.
+
+<details open>
+<summary><strong>Root and operations</strong></summary>
+
+| Path | Role |
+| --- | --- |
+| `README.md` | This project hub |
+| `docker-compose.yml` | Local PostGIS, backend, and frontend orchestration |
+| `scripts/run-backend.sh` | Creates the backend environment, migrates, starts Uvicorn |
+| `scripts/run-frontend.sh` | Installs frontend dependencies and starts Next.js |
+| `scripts/run-docker.sh` | Docker convenience entry point |
+| `assets/` | Brand and README architecture visuals |
+| `infrastructure/` | Render and deployment instructions |
+| `.gitignore` | Python, Node, local data, logs, and IDE exclusions |
+
+</details>
 
 <details>
-<summary><strong>View the scoring details</strong></summary>
+<summary><strong>Backend inventory</strong></summary>
 
-The default satellite weights are:
-
-| Contributor | Weight |
-| --- | ---: |
-| NDCI chlorophyll proxy | 0.40 |
-| NDTI turbidity proxy | 0.25 |
-| Shoreline NDVI | 0.10 |
-| MNDWI water-signal floor | 0.10 |
-| NDWI water-signal floor | 0.15 |
-
-Field evidence can add a bounded bonus for visible algae, suspicious colour or odour, dead fish, complaints, and recent rainfall.
-
-Full details: [`docs/risk_model.md`](docs/risk_model.md)
+| Area | Files / modules | Responsibility |
+| --- | --- | --- |
+| Entry point | `backend/app/main.py` | FastAPI app, lifespan, migrations, static uploads |
+| API router | `backend/app/api/v1/router.py` | Versioned route registration |
+| Core runtime | `backend/app/core/config.py` | Environment-backed settings |
+|  | `backend/app/core/database.py` | SQLAlchemy / SQLModel engine and sessions |
+|  | `backend/app/core/tasks.py` | Background job runner protocol and implementation |
+|  | `backend/app/core/logging.py` | Application logging |
+| Models | `backend/app/models/` | Water bodies, sessions, indices, risk, evidence, reports, traces, memory |
+| Schemas | `backend/app/schemas/` | Pydantic request and response DTOs |
+| Main pipeline | `backend/app/services/pipeline.py` | End-to-end monitoring orchestration |
+| Satellite | `backend/app/services/satellite/` | Provider interface, Planetary Computer, offline sample provider |
+| Indices | `backend/app/services/indices.py` | NumPy spectral calculations and aggregation |
+| Risk | `backend/app/services/risk_model.py` | Weighted deterministic score and urgency |
+| Reasoning | `backend/app/services/reasoning.py` | Structured narrative fallback / single-call path |
+| Agents | `backend/app/services/agent/` | Coordinator, Scout, Historian, Analyst, Reporter, runtime, traces |
+| Evidence | `backend/app/services/evidence_handler.py` | Photo validation and EXIF stripping |
+| Reports | `backend/app/services/report_generator.py` | Jinja2 + WeasyPrint PDF generation |
+| Citizen summary | `backend/app/services/citizen_summary.py` | Stable public-facing fallback summary |
+| Utilities | `backend/app/utils/` | Geography, location, charts, PDF helpers |
+| Templates | `backend/app/services/templates/` | Branded HTML report template and assets |
+| Migrations | `backend/alembic/versions/` | Database schema history |
+| Tests | `backend/tests/` | API, pipeline, science, agents, migrations, PDF, and model coverage |
 
 </details>
 
-## The explainable agent workflow
+<details>
+<summary><strong>Frontend inventory</strong></summary>
 
-When agentic mode is enabled, AquaLens uses specialised stages rather than one opaque generation step:
+### Routes
 
-- **Coordinator** plans the work.
-- **Scout** gathers scene and visual context.
-- **Historian** recalls relevant observations from earlier sessions.
-- **Analyst** drafts and critiques the evidence-based reasoning.
-- **Reporter** turns the result into a clear citizen-facing summary.
+| Surface | Route files |
+| --- | --- |
+| Marketing | `frontend/app/(marketing)/page.tsx`, `about/page.tsx`, `methodology/page.tsx`, `limitations/page.tsx`, `changelog/page.tsx` |
+| Dashboard | `frontend/app/(app)/dashboard/page.tsx` |
+| Monitoring | `frontend/app/(app)/monitor/page.tsx` |
+| Sessions | `frontend/app/(app)/sessions/page.tsx`, `[id]/page.tsx`, `[id]/evidence/page.tsx`, `[id]/report/page.tsx` |
+| Water bodies | `frontend/app/(app)/water-bodies/page.tsx`, `[id]/page.tsx` |
+| Settings | `frontend/app/(app)/settings/page.tsx` |
+| Platform | `layout.tsx`, `error.tsx`, `not-found.tsx`, `robots.ts`, `sitemap.ts` |
 
-The agent layer is optional. Local and test runs can use deterministic fallbacks with no Gemini calls.
+### Components
 
-Read more in [`docs/agent_layer.md`](docs/agent_layer.md).
+| Component group | What it contains |
+| --- | --- |
+| `components/chrome/` | Sidebar, top navigation, footer, command menu, logo, theme toggle |
+| `components/map/` | MapLibre map, map search, mini-map, basemap switcher |
+| `components/session/` | Session wizard, risk cards, index tables, trace, scene metadata, status UI |
+| `components/evidence/` | Evidence form and evidence list |
+| `components/report/` | PDF report download button |
+| `components/water-body/` | Water-body actions |
+| `components/marketing/` | Hero, workflow, agent constellation, indices showcase, citations, CTA |
+| `components/motion/` | Number animation, fade-in, staggered motion |
+| `components/ui/` | Badge, button, card, dialog, drawer, dropdown, input, progress, tabs, tooltip, and other primitives |
+| `hooks/` | Sessions, water bodies, evidence, geocoding, agent trace |
+| `lib/` | API client, types, query keys, geography, formatting, SEO, glossary, environment |
+| `public/map-styles/` | Street, satellite, and terrain MapLibre styles |
 
-## System architecture
+</details>
 
-<p align="center">
-  <img src="assets/readme-architecture.png" alt="AquaLens system architecture" width="78%" />
-</p>
+<details>
+<summary><strong>Documentation and infrastructure inventory</strong></summary>
 
-## Project structure
+| Path | Covers |
+| --- | --- |
+| `docs/architecture.md` | Backend, frontend, pipeline, agent topology, data guarantees |
+| `docs/frontend_design.md` | Frontend information architecture and visual system |
+| `docs/api_contract.md` | REST payloads, responses, errors, and lifecycle |
+| `docs/spectral_indices.md` | Sentinel-2 bands, formulas, masking, aggregation |
+| `docs/risk_model.md` | Risk normalisation, weights, evidence bonus, urgency |
+| `docs/agent_layer.md` | Agent tools, memory, traces, fallbacks, tests |
+| `docs/user_manual.md` | End-user workflow |
+| `infrastructure/deployment.md` | Supabase + Render + Vercel deployment |
+| `infrastructure/render.yaml` | Render blueprint |
+| `frontend/vercel.json` | Frontend deployment configuration |
+| `backend/Dockerfile` | Backend image and WeasyPrint runtime dependencies |
+| `backend/pyproject.toml` | Python package, dependencies, tests, Ruff, Black |
+| `frontend/package.json` | Frontend dependencies and scripts |
+
+</details>
+
+## Frontend map
+
+The Next.js application is split into two product surfaces:
+
+<table>
+  <tr>
+    <td width="50%"><strong>Marketing surface</strong><br /><br />Landing page<br />Methodology<br />Limitations<br />About<br />Changelog<br /><br /><code>frontend/app/(marketing)/</code></td>
+    <td width="50%"><strong>Monitoring application</strong><br /><br />Dashboard<br />Map-based monitor<br />Water bodies<br />Session history<br />Evidence capture<br />Risk and index analysis<br />Agent trace<br />PDF report<br /><br /><code>frontend/app/(app)/</code></td>
+  </tr>
+</table>
+
+The UI uses MapLibre for geography, TanStack Query for server state, typed API helpers, shadcn-style primitives, and motion components for progressive disclosure.
+
+## Backend map
+
+The backend is intentionally layered:
 
 ```text
-.
-├── backend/                  FastAPI API, analysis pipeline, models, migrations, tests
-├── frontend/                 Next.js application, maps, dashboard, sessions, reports
-├── docs/                     Product, architecture, API, science, and deployment docs
-├── infrastructure/           Render and deployment configuration
-├── scripts/                  Local development launch scripts
-├── assets/                   Brand assets
-└── docker-compose.yml        PostGIS, backend, and frontend stack
+FastAPI routes
+    ↓
+Pydantic schemas
+    ↓
+Background task runner
+    ↓
+Monitoring pipeline
+    ├── Satellite provider
+    ├── Spectral indices
+    ├── Deterministic risk model
+    ├── Optional agent layer
+    ├── Evidence handler
+    └── PDF report generator
+    ↓
+SQLModel / Postgres / PostGIS / pgvector
 ```
 
-## Technology
+The numeric pipeline completes before the narrative layer. The agent layer can enrich the explanation, but the risk model remains authoritative.
 
-| Area | Stack |
-| --- | --- |
-| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS, MapLibre GL |
-| Backend | FastAPI, Python 3.11+, Pydantic, SQLModel, Uvicorn |
-| Geospatial | Sentinel-2 L2A, STAC, Rasterio, NumPy, Shapely, PyProj |
-| Data | SQLite for lightweight local runs; Postgres, PostGIS, and optional pgvector for the full stack |
-| AI | Gemini structured generation, agent orchestration, optional semantic memory |
-| Reports | Jinja2 and WeasyPrint |
-| Testing | Pytest, Ruff, Black, Vitest, TypeScript, Playwright |
+## API surface
 
-## Run AquaLens locally
+All public routes are mounted under `/api/v1`.
+
+| Area | Method | Endpoint | Purpose |
+| --- | --- | --- | --- |
+| Health | `GET` | `/health` | Liveness check |
+| Water bodies | `GET` | `/water-bodies` | List saved areas |
+| Water bodies | `POST` | `/water-bodies` | Create a polygon or buffered point |
+| Water bodies | `GET` | `/water-bodies/{id}` | Read one area |
+| Water bodies | `PATCH` | `/water-bodies/{id}` | Rename or update description |
+| Water bodies | `DELETE` | `/water-bodies/{id}` | Delete an area and child sessions |
+| Sessions | `POST` | `/sessions` | Create a background monitoring run |
+| Sessions | `GET` | `/sessions` | List and filter sessions |
+| Sessions | `GET` | `/sessions/{id}` | Read complete session detail |
+| Analysis | `GET` | `/sessions/{id}/indices` | Read six spectral indices |
+| Analysis | `GET` | `/sessions/{id}/risk` | Read risk, urgency, contributors, reasoning |
+| Evidence | `POST` | `/sessions/{id}/evidence` | Add field evidence and optional photo |
+| Evidence | `GET` | `/sessions/{id}/evidence` | List field evidence |
+| Trace | `GET` | `/sessions/{id}/trace` | Read multi-agent execution trace |
+| Report | `GET` | `/sessions/{id}/report` | Download a regenerated PDF |
+
+Full payloads and response schemas: [`docs/api_contract.md`](docs/api_contract.md).
+
+## Run locally
 
 ### Requirements
 
-- Python 3.11 or newer
-- Node.js 20 or newer
-- pnpm 9 or newer
-- Docker Desktop for the full PostGIS setup
+- Python 3.11+
+- Node.js 20+
+- pnpm 9+
+- Docker Desktop for PostGIS mode
 
-### Option A — Simple local development
-
-Clone the repository:
+### Local deterministic mode
 
 ```bash
 git clone https://github.com/RidhimaKulashriz/aqua-lens.git
 cd aqua-lens
-```
-
-Create a local `.env` for a deterministic, key-free run:
-
-```dotenv
+cat > .env <<'EOF'
 AQUALENS_FAKE_GEMINI=1
 AQUALENS_USE_SAMPLE_PROVIDER=1
 DATABASE_URL=sqlite:///./aqualens.db
 CORS_ALLOW_ORIGINS=http://localhost:3000
+EOF
 ```
 
-Start the backend in one terminal:
+Terminal 1 — backend:
 
 ```bash
 ./scripts/run-backend.sh
 ```
 
-Start the frontend in another terminal:
+Terminal 2 — frontend:
 
 ```bash
 ./scripts/run-frontend.sh
 ```
 
-Open the application at **[http://localhost:3000](http://localhost:3000)**.
+Open:
 
-### Option B — Live Gemini and satellite data
+| Surface | URL |
+| --- | --- |
+| Frontend | `http://localhost:3000` |
+| API | `http://localhost:8000/api/v1` |
+| Swagger | `http://localhost:8000/docs` |
+| OpenAPI | `http://localhost:8000/openapi.json` |
+| Health | `http://localhost:8000/api/v1/health` |
 
-Use the same setup, but configure your own Gemini key:
+### Live Gemini mode
+
+Replace the fake-mode settings with your own key:
 
 ```dotenv
 GOOGLE_API_KEY=your-gemini-api-key
@@ -254,49 +443,42 @@ DATABASE_URL=sqlite:///./aqualens.db
 CORS_ALLOW_ORIGINS=http://localhost:3000
 ```
 
-Do not commit `.env` or any API keys.
+Never commit `.env` or API keys.
 
-### Option C — Docker Compose
-
-Start the complete local stack:
+### Docker mode
 
 ```bash
 docker compose up --build
 ```
 
-| Service | Address |
-| --- | --- |
-| Frontend | `http://localhost:3000` |
-| Backend | `http://localhost:8000` |
-| Swagger UI | `http://localhost:8000/docs` |
-| PostGIS | `localhost:5432` |
+This starts PostGIS on `5432`, the backend on `8000`, and the frontend on `3000`.
 
-Stop the stack:
+## Configuration
 
-```bash
-docker compose down
-```
+| Variable | Default | Used by |
+| --- | --- | --- |
+| `DATABASE_URL` | `sqlite:///./aqualens.db` | Database layer |
+| `CORS_ALLOW_ORIGINS` | `http://localhost:3000` | API CORS |
+| `GOOGLE_API_KEY` | unset | Gemini runtime |
+| `GOOGLE_API_KEY_FALLBACK` | unset | Quota fallback |
+| `GOOGLE_API_KEY_FALLBACK_2` | unset | Second quota fallback |
+| `GEMINI_MODEL` | `gemini-2.0-flash` | Narrative generation |
+| `GEMINI_EMBEDDING_MODEL` | `text-embedding-004` | Historian memory |
+| `PC_STAC_URL` | Earth Search STAC | Satellite provider |
+| `DEFAULT_LOOKBACK_DAYS` | `30` | New-session default |
+| `MAX_CLOUD_COVER` | `30` | Scene filter |
+| `AQUALENS_AGENTIC_MODE` | `true` | Multi-agent orchestration |
+| `AQUALENS_FAKE_GEMINI` | `false` | Deterministic local fallback |
+| `AQUALENS_USE_SAMPLE_PROVIDER` | `false` | Sample imagery provider |
+| `AQUALENS_AGENT_STEP_DELAY_MS` | `0` | Demo pacing |
+| `UPLOAD_DIR` | `data/uploads` | Evidence photos |
+| `REPORT_DIR` | `data/reports` | Generated PDFs |
 
-## API overview
+Canonical implementation: [`backend/app/core/config.py`](backend/app/core/config.py).
 
-The API is mounted at `/api/v1`.
+## Testing
 
-| Area | Endpoints |
-| --- | --- |
-| Water bodies | `GET`, `POST`, `PATCH`, `DELETE /water-bodies` |
-| Sessions | `POST /sessions`, `GET /sessions`, `GET /sessions/{id}` |
-| Analysis | `GET /sessions/{id}/indices`, `GET /sessions/{id}/risk` |
-| Evidence | `POST`, `GET /sessions/{id}/evidence` |
-| Trace and reports | `GET /sessions/{id}/trace`, `GET /sessions/{id}/report` |
-| Health | `GET /health` |
-
-A session is created immediately, then processed in the background. Its status moves through `pending`, `processing`, and `complete` or `failed`.
-
-The complete contract is in [`docs/api_contract.md`](docs/api_contract.md). The live OpenAPI interface is available at `/docs`.
-
-## Test and quality checks
-
-Backend:
+### Backend
 
 ```bash
 cd backend
@@ -305,7 +487,7 @@ python -m ruff check .
 python -m black --check app/ tests/ alembic/
 ```
 
-Frontend:
+### Frontend
 
 ```bash
 cd frontend
@@ -315,35 +497,53 @@ pnpm test
 pnpm e2e
 ```
 
+| Test area | Location |
+| --- | --- |
+| Agent runtime and tools | `backend/tests/test_agent_runtime.py`, `test_agent_tools.py` |
+| Agent stages | `backend/tests/test_agent_scout.py`, `test_agent_historian.py`, `test_agent_analyst.py`, `test_agent_orchestrator.py` |
+| Pipeline and risk | `backend/tests/test_pipeline.py`, `test_risk_model.py`, `test_indices.py` |
+| API | `backend/tests/test_api_sessions.py`, `test_api_evidence.py` |
+| Reports | `backend/tests/test_pdf.py` |
+| Frontend units | `frontend/tests/unit/` |
+| Frontend E2E | `frontend/tests/e2e/landing.spec.ts` |
+
 ## Deployment
 
-The repository includes configuration for a split deployment:
+The repository is structured for a split deployment:
 
-- Frontend: Vercel
-- Backend: Render
-- Database: Postgres with PostGIS
+| Surface | Provider | Configuration |
+| --- | --- | --- |
+| Frontend | Vercel | `frontend/vercel.json` |
+| Backend | Render Docker service | `infrastructure/render.yaml` |
+| Database | Supabase Postgres + PostGIS + pgvector | `infrastructure/deployment.md` |
+| Satellite imagery | Microsoft Planetary Computer STAC | Backend environment |
+| Map tiles | OpenFreeMap | Frontend map styles |
+| LLM reasoning | Google AI Studio Gemini | `GOOGLE_API_KEY` |
 
-See [`infrastructure/deployment.md`](infrastructure/deployment.md) for the deployment walkthrough.
+Deployment guide: [`infrastructure/deployment.md`](infrastructure/deployment.md).
 
-## Safety and limitations
+## Limitations
 
-AquaLens works with signals and proxies. Results may be affected by cloud cover, spatial resolution, atmospheric conditions, mixed pixels, water-mask quality, scene availability, and incomplete field observations.
+AquaLens works with environmental signals and proxies. Results can be affected by cloud cover, scene availability, atmospheric conditions, spatial resolution, mixed pixels, water-mask quality, and incomplete field observations.
 
 Use AquaLens to decide **what deserves a closer look**. Use laboratory testing and qualified professionals to decide **what is safe**.
 
-## Documentation index
+## Documentation
 
-- [`docs/user_manual.md`](docs/user_manual.md) — using the application
-- [`docs/architecture.md`](docs/architecture.md) — system design and data flow
-- [`docs/api_contract.md`](docs/api_contract.md) — API endpoints and payloads
-- [`docs/spectral_indices.md`](docs/spectral_indices.md) — formulas and satellite bands
-- [`docs/risk_model.md`](docs/risk_model.md) — scoring and urgency logic
-- [`docs/agent_layer.md`](docs/agent_layer.md) — agent roles, memory, and traces
-- [`infrastructure/deployment.md`](infrastructure/deployment.md) — deployment setup
+| Document | Purpose |
+| --- | --- |
+| [`docs/architecture.md`](docs/architecture.md) | Deep backend, frontend, pipeline, and data architecture |
+| [`docs/frontend_design.md`](docs/frontend_design.md) | Frontend information architecture and visual system |
+| [`docs/api_contract.md`](docs/api_contract.md) | API payloads, responses, lifecycle, and errors |
+| [`docs/spectral_indices.md`](docs/spectral_indices.md) | Sentinel-2 bands, formulas, masking, and aggregation |
+| [`docs/risk_model.md`](docs/risk_model.md) | Normalisation, weights, evidence bonus, and urgency |
+| [`docs/agent_layer.md`](docs/agent_layer.md) | Agent roles, tools, memory, traces, and fallbacks |
+| [`docs/user_manual.md`](docs/user_manual.md) | End-user workflow |
+| [`infrastructure/deployment.md`](infrastructure/deployment.md) | Supabase, Render, Vercel, and production notes |
 
 ---
 
 <div align="center">
   <p><strong>Observe clearly. Investigate sooner. Keep the reasoning visible.</strong></p>
-  <sub>AquaLens freshwater monitoring</sub>
+  <sub>AquaLens · freshwater monitoring infrastructure</sub>
 </div>

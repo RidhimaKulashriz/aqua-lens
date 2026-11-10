@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">AquaLens architecture</title>
+  <desc id="desc">AquaLens frontend routes call a FastAPI backend, which coordinates geospatial analysis, a deterministic risk model, an optional agent layer, storage, and PDF reporting.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#101827"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".28"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#67e8f9"/></marker>
+  </defs>
+  <rect width="1600" height="980" rx="28" fill="url(#bg)"/>
+  <text x="70" y="66" fill="#e6f1ff" font-family="Inter,Arial,sans-serif" font-size="29" font-weight="700">AquaLens / system architecture</text>
+  <text x="70" y="98" fill="#8ca5b9" font-family="Inter,Arial,sans-serif" font-size="16">A full-stack monitoring loop: map → API → analysis → evidence → report.</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="70" y="145" width="1460" height="175" rx="22" fill="#0b1e31" stroke="#256b9a" stroke-width="2"/>
+    <text x="100" y="181" fill="#67e8f9" font-size="14" font-weight="700" letter-spacing="2">01 / PRESENTATION</text>
+    <g><rect x="105" y="207" width="315" height="76" rx="14" fill="#102a43" stroke="#60a5fa" stroke-width="2"/><text x="262" y="239" fill="#eff6ff" font-size="18" text-anchor="middle" font-weight="700">Marketing surfaces</text><text x="262" y="264" fill="#a8c7e8" font-size="13" text-anchor="middle">landing · methodology · about · limits</text></g>
+    <g><rect x="455" y="207" width="315" height="76" rx="14" fill="#102a43" stroke="#60a5fa" stroke-width="2"/><text x="612" y="239" fill="#eff6ff" font-size="18" text-anchor="middle" font-weight="700">Monitoring app</text><text x="612" y="264" fill="#a8c7e8" font-size="13" text-anchor="middle">dashboard · monitor · sessions · settings</text></g>
+    <g><rect x="805" y="207" width="315" height="76" rx="14" fill="#102a43" stroke="#60a5fa" stroke-width="2"/><text x="962" y="239" fill="#eff6ff" font-size="18" text-anchor="middle" font-weight="700">Session surfaces</text><text x="962" y="264" fill="#a8c7e8" font-size="13" text-anchor="middle">risk · indices · trace · evidence · report</text></g>
+    <g><rect x="1155" y="207" width="315" height="76" rx="14" fill="#102a43" stroke="#60a5fa" stroke-width="2"/><text x="1312" y="239" fill="#eff6ff" font-size="18" text-anchor="middle" font-weight="700">Map + UI system</text><text x="1312" y="264" fill="#a8c7e8" font-size="13" text-anchor="middle">MapLibre · shadcn primitives · motion</text></g>
+
+    <rect x="70" y="360" width="1460" height="175" rx="22" fill="#0d292d" stroke="#238b83" stroke-width="2"/>
+    <text x="100" y="396" fill="#5eead4" font-size="14" font-weight="700" letter-spacing="2">02 / APPLICATION CORE</text>
+    <g><rect x="105" y="422" width="315" height="76" rx="14" fill="#123b36" stroke="#2dd4bf" stroke-width="2"/><text x="262" y="454" fill="#ecfeff" font-size="18" text-anchor="middle" font-weight="700">FastAPI REST API</text><text x="262" y="479" fill="#a7f3d0" font-size="13" text-anchor="middle">water bodies · sessions · evidence · health</text></g>
+    <g><rect x="455" y="422" width="315" height="76" rx="14" fill="#123b36" stroke="#2dd4bf" stroke-width="2"/><text x="612" y="454" fill="#ecfeff" font-size="18" text-anchor="middle" font-weight="700">Background runner</text><text x="612" y="479" fill="#a7f3d0" font-size="13" text-anchor="middle">pending → processing → complete / failed</text></g>
+    <g><rect x="805" y="422" width="315" height="76" rx="14" fill="#123b36" stroke="#2dd4bf" stroke-width="2"/><text x="962" y="454" fill="#ecfeff" font-size="18" text-anchor="middle" font-weight="700">Pipeline orchestration</text><text x="962" y="479" fill="#a7f3d0" font-size="13" text-anchor="middle">imagery → indices → risk → narrative</text></g>
+    <g><rect x="1155" y="422" width="315" height="76" rx="14" fill="#123b36" stroke="#2dd4bf" stroke-width="2"/><text x="1312" y="454" fill="#ecfeff" font-size="18" text-anchor="middle" font-weight="700">Evidence + reporting</text><text x="1312" y="479" fill="#a7f3d0" font-size="13" text-anchor="middle">EXIF stripping · Jinja2 · WeasyPrint</text></g>
+
+    <rect x="70" y="575" width="1460" height="175" rx="22" fill="#211b39" stroke="#7555bd" stroke-width="2"/>
+    <text x="100" y="611" fill="#c4b5fd" font-size="14" font-weight="700" letter-spacing="2">03 / SCIENCE + REASONING</text>
+    <g><rect x="105" y="637" width="315" height="76" rx="14" fill="#30214d" stroke="#a78bfa" stroke-width="2"/><text x="262" y="669" fill="#f5f3ff" font-size="18" text-anchor="middle" font-weight="700">Satellite providers</text><text x="262" y="694" fill="#ddd6fe" font-size="13" text-anchor="middle">Planetary Computer · sample provider</text></g>
+    <g><rect x="455" y="637" width="315" height="76" rx="14" fill="#30214d" stroke="#a78bfa" stroke-width="2"/><text x="612" y="669" fill="#f5f3ff" font-size="18" text-anchor="middle" font-weight="700">Spectral analysis</text><text x="612" y="694" fill="#ddd6fe" font-size="13" text-anchor="middle">Rasterio · NumPy · six indices</text></g>
+    <g><rect x="805" y="637" width="315" height="76" rx="14" fill="#30214d" stroke="#a78bfa" stroke-width="2"/><text x="962" y="669" fill="#f5f3ff" font-size="18" text-anchor="middle" font-weight="700">Deterministic risk</text><text x="962" y="694" fill="#ddd6fe" font-size="13" text-anchor="middle">weighted score · urgency · contributors</text></g>
+    <g><rect x="1155" y="637" width="315" height="76" rx="14" fill="#30214d" stroke="#a78bfa" stroke-width="2"/><text x="1312" y="669" fill="#f5f3ff" font-size="18" text-anchor="middle" font-weight="700">Agent layer</text><text x="1312" y="694" fill="#ddd6fe" font-size="13" text-anchor="middle">Coordinator · Scout · Historian · Analyst · Reporter</text></g>
+
+    <rect x="70" y="790" width="1460" height="125" rx="22" fill="#2b2119" stroke="#a77925" stroke-width="2"/>
+    <text x="100" y="826" fill="#fcd34d" font-size="14" font-weight="700" letter-spacing="2">04 / PERSISTENCE + DELIVERY</text>
+    <g><rect x="105" y="848" width="315" height="46" rx="12" fill="#3b2a1f" stroke="#fbbf24" stroke-width="2"/><text x="262" y="877" fill="#fef3c7" font-size="16" text-anchor="middle">SQLite / Postgres + PostGIS</text></g>
+    <g><rect x="455" y="848" width="315" height="46" rx="12" fill="#3b2a1f" stroke="#fbbf24" stroke-width="2"/><text x="612" y="877" fill="#fef3c7" font-size="16" text-anchor="middle">agent_traces + agent_memory</text></g>
+    <g><rect x="805" y="848" width="315" height="46" rx="12" fill="#3b2a1f" stroke="#fbbf24" stroke-width="2"/><text x="962" y="877" fill="#fef3c7" font-size="16" text-anchor="middle">uploads + generated reports</text></g>
+    <g><rect x="1155" y="848" width="315" height="46" rx="12" fill="#3b2a1f" stroke="#fbbf24" stroke-width="2"/><text x="1312" y="877" fill="#fef3c7" font-size="16" text-anchor="middle">Vercel + Render + Supabase</text></g>
+  </g>
+  <g stroke="#67e8f9" stroke-width="2" stroke-dasharray="8 8" opacity=".7" fill="none" marker-end="url(#arrow)"><path d="M800 320V350"/><path d="M800 535V565"/><path d="M800 750V780"/></g>
+</svg>
