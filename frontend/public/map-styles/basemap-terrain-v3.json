@@ -1,0 +1,23 @@
+{
+  "version": 8,
+  "name": "AquaLens Terrain",
+  "sources": {
+    "opentopo": {
+      "type": "raster",
+      "tiles": [
+        "https://a.tile.opentopomap.org/{z}/{x}/{y}.png",
+        "https://b.tile.opentopomap.org/{z}/{x}/{y}.png",
+        "https://c.tile.opentopomap.org/{z}/{x}/{y}.png"
+      ],
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 17,
+      "attribution": "Map data: © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>, SRTM | Style: © <a href=\"https://opentopomap.org\">OpenTopoMap</a> (CC-BY-SA)"
+    }
+  },
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "layers": [
+    { "id": "background", "type": "background", "paint": { "background-color": "#e6f0e7" } },
+    { "id": "opentopo", "type": "raster", "source": "opentopo" }
+  ]
+}
