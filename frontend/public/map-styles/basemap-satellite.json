@@ -11,25 +11,11 @@
       "minzoom": 0,
       "maxzoom": 19,
       "attribution": "Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
-    },
-    "labels": {
-      "type": "raster",
-      "tiles": [
-        "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
-        "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
-        "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
-        "https://d.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png"
-      ],
-      "tileSize": 256,
-      "minzoom": 0,
-      "maxzoom": 20,
-      "attribution": "© <a href=\"https://carto.com/attributions\">CARTO</a>"
     }
   },
   "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "layers": [
     { "id": "background", "type": "background", "paint": { "background-color": "#0b1024" } },
-    { "id": "imagery", "type": "raster", "source": "imagery" },
-    { "id": "labels", "type": "raster", "source": "labels", "paint": { "raster-opacity": 0.85 } }
+    { "id": "imagery", "type": "raster", "source": "imagery" }
   ]
 }
