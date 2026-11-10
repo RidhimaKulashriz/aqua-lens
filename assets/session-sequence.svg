@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" role="img" aria-labelledby="t d">
+<title id="t">AquaLens monitoring sequence</title>
+<desc id="d">UML sequence diagram showing session creation, database write, FastAPI background task, STAC retrieval, Rasterio and NumPy processing, deterministic scoring, optional agent reasoning and persisted result retrieval.</desc>
+<defs><marker id="m" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8" fill="none" stroke="#294b5d" stroke-width="1.1"/></marker><marker id="r" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8" fill="none" stroke="#66777e" stroke-width="1.1"/></marker></defs>
+<rect width="1800" height="1080" fill="#fff"/>
+<text x="48" y="52" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#192a32" letter-spacing="1">SESSION EXECUTION · UML SEQUENCE</text>
+<text x="48" y="78" font-family="Arial,sans-serif" font-size="13" fill="#586971">The API returns a pending session; the analysis then runs through FastAPI BackgroundTasks.</text>
+<line x1="48" y1="100" x2="1752" y2="100" stroke="#bdc8cc"/>
+
+<!-- Participants -->
+<g font-family="Arial,sans-serif" font-size="12" text-anchor="middle" fill="#23343c">
+<rect x="50" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="115" y="148" font-weight="700">Browser</text><text x="115" y="165" font-size="10.5">Next.js</text>
+<rect x="250" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="315" y="148" font-weight="700">API</text><text x="315" y="165" font-size="10.5">FastAPI</text>
+<rect x="450" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="515" y="148" font-weight="700">Database</text><text x="515" y="165" font-size="10.5">SQLModel</text>
+<rect x="650" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="715" y="148" font-weight="700">Job runner</text><text x="715" y="165" font-size="10.5">BackgroundTasks</text>
+<rect x="850" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="915" y="148" font-weight="700">STAC provider</text><text x="915" y="165" font-size="10.5">Catalogue / COG</text>
+<rect x="1050" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="1115" y="148" font-weight="700">Raster + indices</text><text x="1115" y="165" font-size="10.5">Rasterio / NumPy</text>
+<rect x="1250" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="1315" y="148" font-weight="700">Risk model</text><text x="1315" y="165" font-size="10.5">score_risk()</text>
+<rect x="1450" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="1515" y="148" font-weight="700">Agent layer</text><text x="1515" y="165" font-size="10.5">Optional</text>
+<rect x="1650" y="125" width="130" height="54" fill="#eef3f5" stroke="#526a75"/><text x="1715" y="148" font-weight="700">Gemini</text><text x="1715" y="165" font-size="10.5">Model / tools</text>
+</g>
+<g stroke="#aab6bb" stroke-dasharray="5 6" stroke-width="1.1"><path d="M115 179V1020M315 179V1020M515 179V1020M715 179V1020M915 179V1020M1115 179V1020M1315 179V1020M1515 179V1020M1715 179V1020"/></g>
+<g fill="#dce7eb" stroke="#526a75"><rect x="309" y="205" width="12" height="130"/><rect x="509" y="245" width="12" height="55"/><rect x="709" y="350" width="12" height="565"/><rect x="909" y="435" width="12" height="78"/><rect x="1109" y="535" width="12" height="115"/><rect x="1309" y="665" width="12" height="58"/><rect x="1509" y="805" width="12" height="115"/><rect x="1709" y="845" width="12" height="45"/></g>
+
+<!-- Messages -->
+<g font-family="Arial,sans-serif" font-size="12" fill="#263840">
+<path d="M115 215H309" stroke="#294b5d" stroke-width="1.5" fill="none" marker-end="url(#m)"/><text x="212" y="204" text-anchor="middle">POST /sessions</text>
+<path d="M321 260H509" stroke="#294b5d" stroke-width="1.5" fill="none" marker-end="url(#m)"/><text x="415" y="249" text-anchor="middle">INSERT session</text><text x="415" y="276" font-size="10.5" fill="#66777e" text-anchor="middle">status = pending</text>
+<path d="M321 315H709" stroke="#294b5d" stroke-width="1.5" fill="none" marker-end="url(#m)"/><text x="515" y="304" text-anchor="middle">add_task(run_full, session_id)</text>
+<path d="M309 355H115" stroke="#66777e" stroke-width="1.3" stroke-dasharray="5 4" fill="none" marker-end="url(#r)"/><text x="212" y="344" text-anchor="middle">201 Created · pending</text>
+<path d="M715 395H515" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="615" y="384" text-anchor="middle">status = processing</text>
+<path d="M721 455H909" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="815" y="444" text-anchor="middle">search AOI / dates / cloud cap</text>
+<path d="M909 505H721" stroke="#66777e" stroke-width="1.3" stroke-dasharray="5 4" fill="none" marker-end="url(#r)"/><text x="815" y="494" text-anchor="middle">scene item + asset metadata</text>
+<path d="M721 560H1109" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="915" y="549" text-anchor="middle">read bands · clip AOI · align grids</text>
+<path d="M1115 600V645" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="1128" y="619" font-size="11">mask + six indices</text>
+<path d="M1121 685H1309" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="1215" y="674" text-anchor="middle">aggregate index values</text>
+<path d="M1309 735H721" stroke="#66777e" stroke-width="1.3" stroke-dasharray="5 4" fill="none" marker-end="url(#r)"/><text x="1015" y="724" text-anchor="middle">score · level · urgency (deterministic)</text>
+</g>
+
+<!-- Optional fragment -->
+<rect x="1430" y="775" width="345" height="178" fill="#fbfcfc" stroke="#66777e" stroke-dasharray="6 4"/>
+<text x="1445" y="799" font-family="Arial,sans-serif" font-size="11.5" font-weight="700" fill="#42565f">OPT · agentic mode enabled + Gemini key</text>
+<g font-family="Arial,sans-serif" font-size="11.5" fill="#263840">
+<path d="M721 830H1509" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="1115" y="819" text-anchor="middle">Coordinator → Scout → optional Historian → Analyst → Reporter</text>
+<path d="M1521 870H1709" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="1615" y="859" text-anchor="middle">model / tool calls</text>
+<path d="M1709 910H1521" stroke="#66777e" stroke-width="1.3" stroke-dasharray="5 4" fill="none" marker-end="url(#r)"/><text x="1615" y="899" text-anchor="middle">structured output</text>
+<path d="M1509 940H721" stroke="#66777e" stroke-width="1.3" stroke-dasharray="5 4" fill="none" marker-end="url(#r)"/><text x="1115" y="929" text-anchor="middle">ReasoningBundle · citizen summary · trace</text>
+</g>
+<text x="1445" y="975" font-family="Arial,sans-serif" font-size="11" fill="#586971">Else: deterministic narrative fallback. The score is unchanged.</text>
+
+<!-- Completion / read -->
+<g font-family="Arial,sans-serif" font-size="12" fill="#263840">
+<path d="M715 1000H515" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="615" y="989" text-anchor="middle">persist results · status = complete</text>
+<path d="M115 1040H309" stroke="#294b5d" stroke-width="1.4" fill="none" marker-end="url(#m)"/><text x="212" y="1029" text-anchor="middle">GET /sessions/{id}</text>
+</g>
+<line x1="48" y1="1060" x2="1752" y2="1060" stroke="#bdc8cc"/>
+<text x="48" y="1083" font-family="Arial,sans-serif" font-size="11.5" fill="#586971">PDF is a separate GET /sessions/{id}/report path: persisted rows → Jinja2 HTML → WeasyPrint PDF → file response.</text>
+</svg>
