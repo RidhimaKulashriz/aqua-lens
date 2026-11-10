@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1050" viewBox="0 0 1640 1050" role="img" aria-labelledby="t d">
+<title id="t">AquaLens persistence entity relationship diagram</title>
+<desc id="d">ER diagram for the eight SQLModel tables and their foreign-key relationships.</desc>
+<rect width="1640" height="1050" fill="#fff"/>
+<text x="48" y="52" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#192a32" letter-spacing="1">PERSISTENCE MODEL · ENTITY RELATIONSHIPS</text>
+<text x="48" y="78" font-family="Arial,sans-serif" font-size="13" fill="#586971">SQLModel entities, primary keys, foreign keys and session cardinality</text>
+<line x1="48" y1="100" x2="1592" y2="100" stroke="#bdc8cc"/>
+
+<!-- Core entities -->
+<g font-family="Arial,sans-serif" fill="#23343c">
+<rect x="210" y="135" width="330" height="185" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="210" y="135" width="330" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="226" y="158" font-size="14.5" font-weight="700">water_bodies</text><text x="226" y="193" font-size="12">PK  id</text><text x="226" y="216" font-size="12">name · description · source</text><text x="226" y="239" font-size="12">geometry (GeoJSON) · centroid</text><text x="226" y="262" font-size="12">area_km2</text><text x="226" y="295" font-size="10.8" fill="#687982">created_at · updated_at</text>
+
+<rect x="700" y="135" width="390" height="210" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="700" y="135" width="390" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="716" y="158" font-size="14.5" font-weight="700">monitoring_sessions</text><text x="716" y="193" font-size="12">PK  id</text><text x="716" y="216" font-size="12">FK  water_body_id</text><text x="716" y="239" font-size="12">start_date · end_date · max_cloud_cover</text><text x="716" y="262" font-size="12">status · status_message</text><text x="716" y="285" font-size="12">scene_id · capture date · provider · metadata</text><text x="716" y="308" font-size="12">water_fraction · aoi_type</text><text x="716" y="330" font-size="10.8" fill="#687982">created_at · updated_at</text>
+
+<rect x="1190" y="410" width="390" height="205" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="1190" y="410" width="390" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="1206" y="433" font-size="14.5" font-weight="700">agent_memory</text><text x="1206" y="468" font-size="12">PK  id</text><text x="1206" y="491" font-size="12">FK  water_body_id</text><text x="1206" y="514" font-size="12">FK  source_session_id</text><text x="1206" y="537" font-size="12">kind · note · confidence</text><text x="1206" y="560" font-size="12">embedding (768-d) · archived_at</text><text x="1206" y="591" font-size="10.8" fill="#687982">Historian notes associated with an AOI</text>
+
+<!-- Child entities -->
+<rect x="45" y="725" width="280" height="220" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="45" y="725" width="280" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="61" y="748" font-size="14.5" font-weight="700">spectral_indices</text><text x="61" y="783" font-size="12">PK  id</text><text x="61" y="806" font-size="12">FK  session_id</text><text x="61" y="829" font-size="12">name · value</text><text x="61" y="852" font-size="12">min · max · stddev</text><text x="61" y="875" font-size="12">bands · sample_count</text><text x="61" y="898" font-size="12">interpretation · extra</text><text x="61" y="928" font-size="10.8" fill="#687982">One row per computed index</text>
+
+<rect x="355" y="725" width="285" height="220" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="355" y="725" width="285" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="371" y="748" font-size="14.5" font-weight="700">field_evidence</text><text x="371" y="783" font-size="12">PK  id</text><text x="371" y="806" font-size="12">FK  session_id</text><text x="371" y="829" font-size="12">water_color · odor · algae_present</text><text x="371" y="852" font-size="12">dead_fish_count · rainfall_mm</text><text x="371" y="875" font-size="12">complaints_count · notes · photo_url</text><text x="371" y="898" font-size="12">latitude · longitude · reporter_name</text><text x="371" y="928" font-size="10.8" fill="#687982">Field observations</text>
+
+<rect x="670" y="725" width="300" height="220" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="670" y="725" width="300" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="686" y="748" font-size="14.5" font-weight="700">risk_assessments</text><text x="686" y="783" font-size="12">PK  id</text><text x="686" y="806" font-size="12">FK  session_id</text><text x="686" y="829" font-size="12">FK? agent_trace_id</text><text x="686" y="852" font-size="12">score · level · urgency</text><text x="686" y="875" font-size="12">contributors · model_id</text><text x="686" y="898" font-size="12">recommendation · reasoning · limitations</text><text x="686" y="928" font-size="10.8" fill="#687982">Numeric result and narrative fields</text>
+
+<rect x="1000" y="725" width="250" height="195" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="1000" y="725" width="250" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="1016" y="748" font-size="14.5" font-weight="700">reports</text><text x="1016" y="783" font-size="12">PK  id</text><text x="1016" y="806" font-size="12">FK  session_id (UNIQUE)</text><text x="1016" y="829" font-size="12">file_path · byte_size</text><text x="1016" y="852" font-size="12">content_type</text><text x="1016" y="893" font-size="10.8" fill="#687982">One cached PDF record per session</text>
+
+<rect x="1280" y="725" width="300" height="220" fill="#fff" stroke="#455d68" stroke-width="1.4"/><rect x="1280" y="725" width="300" height="34" fill="#eaf0f2" stroke="#455d68"/><text x="1296" y="748" font-size="14.5" font-weight="700">agent_traces</text><text x="1296" y="783" font-size="12">PK  id</text><text x="1296" y="806" font-size="12">FK  session_id (UNIQUE)</text><text x="1296" y="829" font-size="12">coordinator_plan · agent_runs</text><text x="1296" y="852" font-size="12">total_tokens_in / out</text><text x="1296" y="875" font-size="12">total_latency_ms · gemini_model</text><text x="1296" y="928" font-size="10.8" fill="#687982">Optional per-session execution record</text>
+</g>
+
+<!-- FK relationships -->
+<g fill="none" stroke="#536871" stroke-width="1.5">
+<path d="M540 225H700"/>
+<path d="M375 320V380H1180V512H1190"/>
+<path d="M895 345V680H185V725"/>
+<path d="M895 680H497V725"/>
+<path d="M895 680H820V725"/>
+<path d="M895 680H1125V725"/>
+<path d="M895 680H1430V725"/>
+<path d="M1090 235H1150V390H1385V410"/>
+<path d="M970 850H1260V970H1430V945"/>
+</g>
+<g font-family="Arial,sans-serif" font-size="10.8" fill="#536871">
+<text x="565" y="213">1</text><text x="674" y="213">0..*</text>
+<text x="385" y="342">1</text><text x="1168" y="505">0..*</text><text x="560" y="370">water_body_id</text>
+<text x="1097" y="256">1</text><text x="1168" y="402">0..*</text><text x="1168" y="378">source_session_id</text>
+<text x="906" y="672">1</text>
+<text x="194" y="708">0..*</text><text x="506" y="708">0..*</text><text x="829" y="708">0..*</text><text x="1134" y="708">0..1</text><text x="1439" y="708">0..1</text>
+<text x="1110" y="961">nullable FK</text>
+</g>
+
+<line x1="48" y1="985" x2="1592" y2="985" stroke="#bdc8cc"/>
+<g font-family="Arial,sans-serif" font-size="11" fill="#586971"><text x="48" y="1008">PK = primary key · FK = foreign key · FK? = nullable foreign key · UNIQUE = one row per session</text><text x="48" y="1030">PostgreSQL adds PostGIS geometry support and a pgvector mirror / HNSW index for semantic memory search. SQLite is used in local and test configurations.</text></g>
+</svg>
