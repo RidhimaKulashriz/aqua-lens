@@ -15,9 +15,9 @@ import { cn } from "@/lib/utils";
 export type Basemap = "street" | "satellite" | "terrain";
 
 const STYLE_URL: Record<Basemap, string> = {
-  street: "/map-styles/basemap-street.json",
-  satellite: "/map-styles/basemap-satellite.json",
-  terrain: "/map-styles/basemap-terrain.json",
+  street: "/map-styles/basemap-street.json?v=2",
+  satellite: "/map-styles/basemap-satellite.json?v=2",
+  terrain: "/map-styles/basemap-terrain.json?v=2",
 };
 
 export type MapHandle = {
