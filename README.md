@@ -1,124 +1,267 @@
 <div align="center">
-  <img src="assets/logo-animated.svg" alt="AquaLens" width="520" />
+  <img src="assets/logo-animated.svg" alt="AquaLens" width="560" />
 
-  <p><strong>Satellite intelligence for clearer freshwater decisions.</strong></p>
+  <h2>See water differently.</h2>
 
   <p>
-    AquaLens combines Sentinel-2 imagery, field observations, deterministic risk scoring,
-    and an explainable agent workflow in one monitoring workspace.
+    AquaLens is a freshwater monitoring platform that combines satellite imagery,
+    field observations, transparent risk scoring, and explainable AI.
   </p>
 
   <p>
-    <a href="https://frontend-eight-gamma-82.vercel.app">Live app</a> ·
-    <a href="https://aqua-lens-backend.onrender.com/docs">API docs</a> ·
-    <a href="docs/user_manual.md">User guide</a> ·
-    <a href="docs/architecture.md">Architecture</a>
+    <a href="https://frontend-eight-gamma-82.vercel.app">Open the live app</a> ·
+    <a href="https://aqua-lens-backend.onrender.com/docs">Explore the API</a> ·
+    <a href="docs/user_manual.md">Read the user guide</a>
   </p>
 </div>
 
 <br />
 
-> **AquaLens is advisory software.** It helps teams prioritise follow-up sampling. It does not certify water safety, detect toxins, or replace laboratory testing.
+> **Important:** AquaLens provides environmental guidance for prioritising follow-up investigation. It is not a water-safety certification, toxin detector, laboratory test, or replacement for professional judgment.
 
-## The idea
+## What is AquaLens?
 
-Freshwater monitoring should not require stitching together satellite scenes, field notes, spreadsheets, and reports by hand.
+AquaLens helps a monitoring team understand what may be happening in a lake, river, reservoir, or other freshwater area.
 
-AquaLens turns a water body into a repeatable monitoring session:
+Instead of keeping satellite data, field notes, calculations, and reports in separate places, AquaLens brings them into one workflow:
 
-```text
-Choose a water body  →  Read the satellite signal  →  Add field evidence  →  Explain the result  →  Share the report
-```
+1. Select a water body.
+2. Analyse recent satellite imagery.
+3. Review the water-quality signals.
+4. Add observations from the field.
+5. Generate a clear, traceable monitoring brief.
 
-The number is calculated deterministically. The narrative explains it. The evidence stays attached to the session.
+The goal is simple: **make it easier to notice changes, decide what needs attention, and explain why.**
 
-## What AquaLens does
+## Why it is useful
 
-<table>
-  <tr>
-    <td width="50%"><strong>Remote sensing</strong><br />Finds a suitable Sentinel-2 L2A scene and analyses the selected water area.</td>
-    <td width="50%"><strong>Six water indices</strong><br />Computes NDWI, MNDWI, NDTI, NDCI, NDVI, and WRI over the water mask.</td>
-  </tr>
-  <tr>
-    <td><strong>Explainable risk</strong><br />Produces a bounded score, risk level, urgency, contributors, and limitations.</td>
-    <td><strong>Field evidence</strong><br />Adds colour, odour, algae, rainfall, complaints, dead fish, notes, and photos.</td>
-  </tr>
-  <tr>
-    <td><strong>Agent workflow</strong><br />Coordinates Scout, Historian, Analyst, and Reporter stages when enabled.</td>
-    <td><strong>Traceable reports</strong><br />Keeps session history, agent traces, evidence, and a downloadable PDF together.</td>
-  </tr>
-</table>
+### One place for the whole monitoring story
 
-## The principle that matters
+AquaLens keeps the location, satellite scene, spectral measurements, field evidence, risk assessment, reasoning, and report connected to the same monitoring session.
 
-### The model can explain the score. It cannot change the score.
+### Numbers first. Explanation second.
 
-AquaLens calculates its numeric risk assessment before the language-model layer runs. Gemini receives the structured measurements and context, then produces a human-readable explanation. It is not allowed to invent measurements or move the risk band.
+The risk score is calculated by a deterministic, testable model. The AI layer explains the result in plain language, but it cannot change the score or invent measurements.
 
-That separation makes the system easier to test, audit, and trust:
+### Remote sensing plus real-world evidence
+
+Satellite data gives broad coverage. Field evidence adds what people can actually see and smell. AquaLens lets both types of information contribute to the same assessment.
+
+### Clear enough to inspect
+
+Every session can show the selected scene, index values, risk contributors, field evidence, agent trace, limitations, and downloadable PDF report.
+
+## How a session works
 
 ```mermaid
 flowchart LR
-  A[Water body] --> B[Sentinel-2 scene]
-  B --> C[Six spectral indices]
-  C --> D[Deterministic risk model]
-  D --> E[Risk score + urgency]
-  D --> F[Agent explanation]
-  G[Field evidence] --> D
-  E --> H[Monitoring report]
-  F --> H
+    A[Choose a water body] --> B[Select a date range]
+    B --> C[Find a Sentinel-2 scene]
+    C --> D[Calculate six indices]
+    D --> E[Compute deterministic risk]
+    E --> F[Add field observations]
+    F --> G[Rescore the session]
+    E --> H[Generate explanation]
+    G --> I[Shareable PDF brief]
+    H --> I
 ```
 
-## Built for real monitoring workflows
+### Step 1 — Choose an area
 
-1. **Create an area** — search for a place, enter coordinates, draw a polygon, or use a buffered point.
-2. **Start a session** — choose the date window and cloud-cover limit.
-3. **Inspect the signal** — review the selected scene and six derived indices.
-4. **Add what the field team sees** — observations and photos become part of the assessment.
-5. **Review and share** — follow the risk reasoning, inspect the trace, and download a PDF brief.
+Search for a place, enter coordinates, draw a polygon, or create a buffered monitoring area. AquaLens stores the geometry, centroid, area, and source.
+
+### Step 2 — Run a monitoring session
+
+Choose a date window and cloud-cover limit. The backend searches for a suitable Sentinel-2 L2A scene through a STAC provider.
+
+### Step 3 — Read the satellite signal
+
+The pipeline builds a water mask and calculates six spectral indices over the selected area. Each result includes statistics, provenance, and an interpretation.
+
+### Step 4 — Add field evidence
+
+Record visible water colour, odour, algae, dead fish, rainfall, public complaints, notes, and optional photos. New evidence triggers a background rescore.
+
+### Step 5 — Understand and share the result
+
+Review the risk level, urgency, contributors, recommendation, limitations, and human-readable explanation. Download a PDF report whenever needed.
+
+## What AquaLens measures
+
+AquaLens uses Sentinel-2 surface-reflectance bands to calculate six normalised indices:
+
+| Index | What it helps indicate |
+| --- | --- |
+| **NDWI** | Open-water signal and water-mask support |
+| **MNDWI** | Water signal with less confusion from built-up surfaces |
+| **NDTI** | Turbidity and suspended-sediment signal |
+| **NDCI** | Chlorophyll-a proxy and possible bloom-related change |
+| **NDVI** | Floating vegetation and shoreline stress |
+| **WRI** | Moisture and open-water signal |
+
+These are environmental proxies. They are useful for prioritising investigation, but they are not direct measurements of toxins or public-health safety.
+
+<details>
+<summary><strong>View the formulas and technical methodology</strong></summary>
+
+The implementation uses the following band math:
+
+```text
+NDWI  = (NIR - SWIR) / (NIR + SWIR)
+MNDWI = (Green - SWIR) / (Green + SWIR)
+NDTI  = (Red - Green) / (Red + Green)
+NDCI  = (Red Edge - Red) / (Red Edge + Red)
+NDVI  = (NIR - Red) / (NIR + Red)
+WRI   = (Green + Red) / (NIR + SWIR)
+```
+
+Bands are resampled to a common grid, masked to the selected area, filtered to water pixels, and aggregated into mean, minimum, maximum, standard deviation, and sample count.
+
+Full details: [`docs/spectral_indices.md`](docs/spectral_indices.md)
+
+</details>
+
+## How risk is calculated
+
+The risk model is deliberately separate from the AI narrative.
+
+```mermaid
+flowchart LR
+    A[Satellite indices] --> C[Normalise signals]
+    B[Field observations] --> D[Bounded evidence bonus]
+    C --> E[Weighted score]
+    D --> E
+    E --> F[Low / medium / high]
+    F --> G[Routine / elevated / immediate]
+```
+
+The model combines satellite signals with bounded field-evidence contributions. The final score is clamped to a fixed range and converted into a risk level and urgency.
+
+The AI layer receives the structured result and writes the explanation. It is not allowed to:
+
+- change the numeric risk score;
+- change the risk level or urgency;
+- invent measurements;
+- claim toxin detection;
+- provide water-safety certification.
+
+<details>
+<summary><strong>View the scoring details</strong></summary>
+
+The default satellite weights are:
+
+| Contributor | Weight |
+| --- | ---: |
+| NDCI chlorophyll proxy | 0.40 |
+| NDTI turbidity proxy | 0.25 |
+| Shoreline NDVI | 0.10 |
+| MNDWI water-signal floor | 0.10 |
+| NDWI water-signal floor | 0.15 |
+
+Field evidence can add a bounded bonus for visible algae, suspicious colour or odour, dead fish, complaints, and recent rainfall.
+
+Full details: [`docs/risk_model.md`](docs/risk_model.md)
+
+</details>
+
+## The explainable agent workflow
+
+When agentic mode is enabled, AquaLens uses specialised stages rather than one opaque generation step:
+
+```mermaid
+flowchart LR
+    C[Coordinator] --> S[Scout]
+    C --> H[Historian]
+    S --> A[Analyst]
+    H --> A
+    A --> R[Reporter]
+    H <--> M[(Water-body memory)]
+    C -.-> T[(Session trace)]
+    S -.-> T
+    H -.-> T
+    A -.-> T
+    R -.-> T
+```
+
+- **Coordinator** plans the work.
+- **Scout** gathers scene and visual context.
+- **Historian** recalls relevant observations from earlier sessions.
+- **Analyst** drafts and critiques the evidence-based reasoning.
+- **Reporter** turns the result into a clear citizen-facing summary.
+
+The agent layer is optional. Local and test runs can use deterministic fallbacks with no Gemini calls.
+
+Read more in [`docs/agent_layer.md`](docs/agent_layer.md).
+
+## Project structure
+
+```text
+.
+├── backend/                  FastAPI API, analysis pipeline, models, migrations, tests
+├── frontend/                 Next.js application, maps, dashboard, sessions, reports
+├── docs/                     Product, architecture, API, science, and deployment docs
+├── infrastructure/           Render and deployment configuration
+├── scripts/                  Local development launch scripts
+├── assets/                   Brand assets
+└── docker-compose.yml        PostGIS, backend, and frontend stack
+```
 
 ## Technology
 
-| Frontend | Backend | Earth observation | Storage & reports |
-| --- | --- | --- | --- |
-| Next.js 15<br />React 19<br />TypeScript<br />MapLibre GL | FastAPI<br />Python 3.11+<br />SQLModel<br />Background tasks | Sentinel-2 L2A<br />STAC<br />Rasterio<br />NumPy | SQLite or Postgres/PostGIS<br />Alembic<br />Jinja2<br />WeasyPrint |
+| Area | Stack |
+| --- | --- |
+| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS, MapLibre GL |
+| Backend | FastAPI, Python 3.11+, Pydantic, SQLModel, Uvicorn |
+| Geospatial | Sentinel-2 L2A, STAC, Rasterio, NumPy, Shapely, PyProj |
+| Data | SQLite for lightweight local runs; Postgres, PostGIS, and optional pgvector for the full stack |
+| AI | Gemini structured generation, agent orchestration, optional semantic memory |
+| Reports | Jinja2 and WeasyPrint |
+| Testing | Pytest, Ruff, Black, Vitest, TypeScript, Playwright |
 
-## Run it locally
+## Run AquaLens locally
 
 ### Requirements
 
-- Python 3.11+
-- Node.js 20+
-- pnpm 9+
-- Docker Desktop, if you want the full PostGIS stack
+- Python 3.11 or newer
+- Node.js 20 or newer
+- pnpm 9 or newer
+- Docker Desktop for the full PostGIS setup
 
-### Fast local setup
+### Option A — Simple local development
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/RidhimaKulashriz/aqua-lens.git
 cd aqua-lens
-printf 'AQUALENS_FAKE_GEMINI=1\nAQUALENS_USE_SAMPLE_PROVIDER=1\n' > .env
 ```
 
-In terminal one:
+Create a local `.env` for a deterministic, key-free run:
+
+```dotenv
+AQUALENS_FAKE_GEMINI=1
+AQUALENS_USE_SAMPLE_PROVIDER=1
+DATABASE_URL=sqlite:///./aqualens.db
+CORS_ALLOW_ORIGINS=http://localhost:3000
+```
+
+Start the backend in one terminal:
 
 ```bash
 ./scripts/run-backend.sh
 ```
 
-In terminal two:
+Start the frontend in another terminal:
 
 ```bash
 ./scripts/run-frontend.sh
 ```
 
-Then open **[http://localhost:3000](http://localhost:3000)**.
+Open the application at **[http://localhost:3000](http://localhost:3000)**.
 
-The backend is available at **[http://localhost:8000](http://localhost:8000)**. Interactive API documentation lives at **[http://localhost:8000/docs](http://localhost:8000/docs)**.
+### Option B — Live Gemini and satellite data
 
-### Live Gemini + satellite data
-
-Replace the local `.env` contents with your own configuration:
+Use the same setup, but configure your own Gemini key:
 
 ```dotenv
 GOOGLE_API_KEY=your-gemini-api-key
@@ -126,68 +269,96 @@ DATABASE_URL=sqlite:///./aqualens.db
 CORS_ALLOW_ORIGINS=http://localhost:3000
 ```
 
-For the complete Postgres/PostGIS environment:
+Do not commit `.env` or any API keys.
+
+### Option C — Docker Compose
+
+Start the complete local stack:
 
 ```bash
 docker compose up --build
 ```
 
-This starts the frontend on `3000`, the API on `8000`, and PostGIS on `5432`.
-
-## API surface
-
-The public API is mounted under `/api/v1`:
-
-```text
-GET/POST       /water-bodies
-GET/PATCH/DELETE /water-bodies/{id}
-POST           /sessions
-GET            /sessions
-GET            /sessions/{id}
-GET            /sessions/{id}/indices
-GET            /sessions/{id}/risk
-POST/GET       /sessions/{id}/evidence
-GET            /sessions/{id}/trace
-GET            /sessions/{id}/report
-GET            /health
-```
-
-A new session starts in the background and moves from `pending` to `processing` to `complete` or `failed`. Adding field evidence schedules a rescore.
-
-## Documentation
-
-| Read this | When you want to… |
+| Service | Address |
 | --- | --- |
-| [`docs/user_manual.md`](docs/user_manual.md) | Use the product end to end |
-| [`docs/architecture.md`](docs/architecture.md) | Understand the system and data flow |
-| [`docs/api_contract.md`](docs/api_contract.md) | Build against the REST API |
-| [`docs/spectral_indices.md`](docs/spectral_indices.md) | Review the formulas and satellite bands |
-| [`docs/risk_model.md`](docs/risk_model.md) | Audit the score and urgency logic |
-| [`docs/agent_layer.md`](docs/agent_layer.md) | Understand the agent roles and memory |
-| [`infrastructure/deployment.md`](infrastructure/deployment.md) | Deploy the application |
+| Frontend | `http://localhost:3000` |
+| Backend | `http://localhost:8000` |
+| Swagger UI | `http://localhost:8000/docs` |
+| PostGIS | `localhost:5432` |
 
-## Quality checks
+Stop the stack:
 
 ```bash
-# Backend
+docker compose down
+```
+
+## API overview
+
+The API is mounted at `/api/v1`.
+
+| Area | Endpoints |
+| --- | --- |
+| Water bodies | `GET`, `POST`, `PATCH`, `DELETE /water-bodies` |
+| Sessions | `POST /sessions`, `GET /sessions`, `GET /sessions/{id}` |
+| Analysis | `GET /sessions/{id}/indices`, `GET /sessions/{id}/risk` |
+| Evidence | `POST`, `GET /sessions/{id}/evidence` |
+| Trace and reports | `GET /sessions/{id}/trace`, `GET /sessions/{id}/report` |
+| Health | `GET /health` |
+
+A session is created immediately, then processed in the background. Its status moves through `pending`, `processing`, and `complete` or `failed`.
+
+The complete contract is in [`docs/api_contract.md`](docs/api_contract.md). The live OpenAPI interface is available at `/docs`.
+
+## Test and quality checks
+
+Backend:
+
+```bash
 cd backend
 python -m pytest -q
 python -m ruff check .
 python -m black --check app/ tests/ alembic/
+```
 
-# Frontend
-cd ../frontend
+Frontend:
+
+```bash
+cd frontend
 pnpm typecheck
 pnpm lint
 pnpm test
+pnpm e2e
 ```
 
-## Limitations
+## Deployment
 
-AquaLens works with environmental signals, not certainty. Results can be affected by cloud cover, spatial resolution, atmospheric conditions, mixed pixels, water-mask quality, and incomplete field observations. A high or low score is a prioritisation signal—not a laboratory result or public-health certification.
+The repository includes configuration for a split deployment:
+
+- Frontend: Vercel
+- Backend: Render
+- Database: Postgres with PostGIS
+
+See [`infrastructure/deployment.md`](infrastructure/deployment.md) for the deployment walkthrough.
+
+## Safety and limitations
+
+AquaLens works with signals and proxies. Results may be affected by cloud cover, spatial resolution, atmospheric conditions, mixed pixels, water-mask quality, scene availability, and incomplete field observations.
+
+Use AquaLens to decide **what deserves a closer look**. Use laboratory testing and qualified professionals to decide **what is safe**.
+
+## Documentation index
+
+- [`docs/user_manual.md`](docs/user_manual.md) — using the application
+- [`docs/architecture.md`](docs/architecture.md) — system design and data flow
+- [`docs/api_contract.md`](docs/api_contract.md) — API endpoints and payloads
+- [`docs/spectral_indices.md`](docs/spectral_indices.md) — formulas and satellite bands
+- [`docs/risk_model.md`](docs/risk_model.md) — scoring and urgency logic
+- [`docs/agent_layer.md`](docs/agent_layer.md) — agent roles, memory, and traces
+- [`infrastructure/deployment.md`](infrastructure/deployment.md) — deployment setup
 
 ---
 
 <div align="center">
-  <sub>Observe better. Investigate sooner. Keep the reasoning visible.</sub>
+  <p><strong>Observe clearly. Investigate sooner. Keep the reasoning visible.</strong></p>
+  <sub>AquaLens freshwater monitoring</sub>
 </div>
